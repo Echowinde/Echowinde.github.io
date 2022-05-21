@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="python,爬虫," />
 
 
 
@@ -79,13 +79,23 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Echowind&#39;s Blog">
-<meta property="og:url" content="https://echowinde.github.io/index.html">
+<meta name="description" content="最近科研中需要爬取几条已知名字的道路的地理数据，从而建立某一区域内的路口和路段间的拓扑关系。一开始想到使用osmnx库，但是尝试之后发现不能满足我的需求。主要存在几个问题：OSM的路网很不干净，存在我不想要的支路段、匝道还有多余节点，如果一个个删除很麻烦；节点合并根据距离，不管怎么调整阈值效果都不理想；坐标系是WGS-84，但我不想频繁转换数据的坐标系。于是尝试从高德地图中获取。 获取道路ID首先">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用selenium爬取高德地图道路地理数据">
+<meta property="og:url" content="https://echowinde.github.io/2022/05/21/amap-road-network-crawler/index.html">
 <meta property="og:site_name" content="Echowind&#39;s Blog">
+<meta property="og:description" content="最近科研中需要爬取几条已知名字的道路的地理数据，从而建立某一区域内的路口和路段间的拓扑关系。一开始想到使用osmnx库，但是尝试之后发现不能满足我的需求。主要存在几个问题：OSM的路网很不干净，存在我不想要的支路段、匝道还有多余节点，如果一个个删除很麻烦；节点合并根据距离，不管怎么调整阈值效果都不理想；坐标系是WGS-84，但我不想频繁转换数据的坐标系。于是尝试从高德地图中获取。 获取道路ID首先">
 <meta property="og:locale">
+<meta property="og:image" content="https://echowinde.github.io/2022/05/21/amap-road-network-crawler/scroll_bar.png">
+<meta property="og:image" content="https://echowinde.github.io/2022/05/21/amap-road-network-crawler/search_box.png">
+<meta property="og:image" content="https://echowinde.github.io/2022/05/21/amap-road-network-crawler/result.png">
+<meta property="article:published_time" content="2022-05-21T14:52:14.000Z">
+<meta property="article:modified_time" content="2022-05-21T15:13:42.205Z">
 <meta property="article:author" content="Echowind">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="爬虫">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://echowinde.github.io/2022/05/21/amap-road-network-crawler/scroll_bar.png">
 
 
 
@@ -115,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="https://echowinde.github.io/"/>
+  <link rel="canonical" href="https://echowinde.github.io/2022/05/21/amap-road-network-crawler/"/>
 
 
 
 
 
-  <title>Echowind's Blog</title>
+  <title>利用selenium爬取高德地图道路地理数据 | Echowind's Blog</title>
   
 
 
@@ -140,8 +150,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -244,9 +253,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -276,9 +285,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/05/21/amap-road-network-crawler/" itemprop="url">利用selenium爬取高德地图道路地理数据</a></h1>
+          <h1 class="post-title" itemprop="name headline">利用selenium爬取高德地图道路地理数据</h1>
         
 
         <div class="post-meta">
@@ -310,6 +317,11 @@
           
 
           
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读次数：
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
 
           
 
@@ -328,9 +340,7 @@
       
 
       
-        
-          
-            <p>最近科研中需要爬取几条已知名字的道路的地理数据，从而建立某一区域内的路口和路段间的拓扑关系。<br>一开始想到使用osmnx库，但是尝试之后发现不能满足我的需求。主要存在几个问题：OSM的路网很不干净，存在我不想要的支路段、匝道还有多余节点，如果一个个删除很麻烦；节点合并根据距离，不管怎么调整阈值效果都不理想；坐标系是WGS-84，但我不想频繁转换数据的坐标系。于是尝试从高德地图中获取。</p>
+        <p>最近科研中需要爬取几条已知名字的道路的地理数据，从而建立某一区域内的路口和路段间的拓扑关系。<br>一开始想到使用osmnx库，但是尝试之后发现不能满足我的需求。主要存在几个问题：OSM的路网很不干净，存在我不想要的支路段、匝道还有多余节点，如果一个个删除很麻烦；节点合并根据距离，不管怎么调整阈值效果都不理想；坐标系是WGS-84，但我不想频繁转换数据的坐标系。于是尝试从高德地图中获取。</p>
 <h3 id="获取道路ID"><a href="#获取道路ID" class="headerlink" title="获取道路ID"></a>获取道路ID</h3><p>首先，高德官方的Web服务API是不提供道路、AOI边界这些线、面地理坐标信息的，但通过<a target="_blank" rel="noopener" href="https://lbs.amap.com/api/webservice/guide/api/search">POI搜索服务</a>可以查询到道路的ID。根据对地图请求抓包，我们可以知道高德是从<code>https://ditu.amap.com/detail/get/detail?id=ID</code>这个url拿到ID对应的JSON，里面包括我们想要的地理数据。</p>
 <p>先获取所有道路的ID。申请一个Web服务的key之后，直接请求就可以了：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">amap_key = <span class="string">&#x27;&#x27;</span>  <span class="comment"># 高德Web服务的开发者key</span></span><br><span class="line">types = <span class="string">&#x27;190301&#x27;</span>  <span class="comment"># 道路的POI类型编码</span></span><br><span class="line">city = <span class="string">&#x27;杭州&#x27;</span></span><br><span class="line">road_name = <span class="string">&#x27;奔竞大道&#x27;</span></span><br><span class="line"></span><br><span class="line">search_url = <span class="string">&#x27;https://restapi.amap.com/v3/place/text?key=&#123;&#125;&amp;keywords=&#123;&#125;&amp;types=&#123;&#125;&amp;city=&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(amap_key, road_name, types, city)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    response = requests.request(<span class="string">&quot;GET&quot;</span>, search_url, headers=headers)</span><br><span class="line">    road_id = json.loads(response.text)[<span class="string">&#x27;pois&#x27;</span>][<span class="number">0</span>][<span class="string">&#x27;id&#x27;</span>]</span><br><span class="line"><span class="keyword">except</span> requests.ConnectionError <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;<span class="subst">&#123;road_name&#125;</span>:&#x27;</span>, e.args)</span><br><span class="line">    road_id = <span class="literal">None</span></span><br></pre></td></tr></table></figure>
@@ -373,8 +383,6 @@
 <p>这个道路爬取方法也有很多不足的地方，一是要保证道路名和高德查询到的相吻合，不要出现别名；二是为了防止被检测，爬取效率还比较低。总体上这个方法基本能满足小规模的应用，大规模的道路爬取可能还比较困难。</p>
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/248626051">Python爬虫终极解决方案-以获取高德地图小区边界为例</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/test_home_c/p/9619542.html">使用selenium模拟登录解决滑块验证问题</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/19d91c4f39aa">高德道路爬取</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44890846/article/details/115962249">selenium解决鼠标拖动滑块慢的问题</a></p>
 
-          
-        
       
     </div>
     
@@ -389,265 +397,38 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/05/08/a-little-thought/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Echowind's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/05/08/a-little-thought/" itemprop="url">从一个课堂报告说起</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-08T21:38:47+08:00">
-                2022-05-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/python/" rel="tag"># python</a>
           
-            
+            <a href="/tags/%E7%88%AC%E8%99%AB/" rel="tag"># 爬虫</a>
           
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <blockquote>
-<p>随着诸如人工智能等技术的发展，是否人类将会变成技术的支配物？    </p>
-</blockquote>
-<p>最近几天在给自然辩证法的课堂报告查些资料，这个题目乍一看好像已经讨论烂了，但过程比我预想的要曲折许多。我原以为这种公共课的糊弄学我已经如火纯青，看在老师上课还挺有意思的份上，最高规格不外乎先到知乎上找几个大V抄一下观点，再去豆瓣找几个影评和书评做论据，最后在百度上复制几个营销号交差。没想到我可能太高估中文互联网社区的质量了，我被迫到知网载了好几篇哲学文献看，这对于我这样的只读过《苏菲的世界》的工科生来说，未免有些对牛弹琴，于是读了一会儿就开始头昏脑胀。这其中最让人头秃的当属海德格尔，因为这位哲学家为了表达他的思想生造了好些词，下文用加粗字体列出。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/05/08/a-little-thought/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/05/08/a-little-thought/" rel="next" title="从一个课堂报告说起">
+                <i class="fa fa-chevron-left"></i> 从一个课堂报告说起
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/05/02/my-first-blog/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Echowind's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/05/02/my-first-blog/" itemprop="url">我开始写博客啦</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+          <div class="post-nav-prev post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-02T20:37:59+08:00">
-                2022-05-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <p>从去年发现GitHub Pages可以托管静态页面之后，我就萌生了搭建个人博客网站的想法，但是因为学习和科研一直很忙<del>就是懒</del>，所以直到这个被关在学校里的五一节，在Apex坐牢无数把，B站刷到索然无味后，我终于把这个博客搭建起来了。目前这个博客使用Hexo框架部署在GitHub Pages上，很多功能和美化我都还没有做，博客也还没有独立的域名，等更新稳定了再去买一个吧。之后我会把生活、科研和学习的日常所思所想post在这上面，顺便用hexo-douban这个插件把豆瓣的电影和图书记录同步过来，这样也会有些影评之类的内容，争取多多更新~</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/05/02/my-first-blog/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -657,10 +438,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -668,6 +450,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -688,8 +474,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -750,6 +545,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E9%81%93%E8%B7%AFID"><span class="nav-number">1.</span> <span class="nav-text">获取道路ID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%88%AC%E5%8F%96%E9%81%93%E8%B7%AF%E5%9C%B0%E7%90%86%E6%95%B0%E6%8D%AE"><span class="nav-number">2.</span> <span class="nav-text">爬取道路地理数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#selenium%E5%92%8C%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">selenium和相关配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%BB%91%E5%8A%A8%E9%AA%8C%E8%AF%81"><span class="nav-number">4.</span> <span class="nav-text">解决滑动验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E5%9C%B0%E5%9B%BE%E9%A1%B5%E9%9D%A2%E7%88%AC%E5%8F%96"><span class="nav-number">5.</span> <span class="nav-text">从地图页面爬取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -907,6 +718,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
