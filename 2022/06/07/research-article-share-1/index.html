@@ -93,7 +93,7 @@
 <meta property="og:image" content="https://echowinde.github.io/2022/06/07/research-article-share-1/5.png">
 <meta property="og:image" content="https://echowinde.github.io/2022/06/07/research-article-share-1/6.png">
 <meta property="article:published_time" content="2022-06-07T13:28:54.000Z">
-<meta property="article:modified_time" content="2022-06-07T14:00:25.971Z">
+<meta property="article:modified_time" content="2022-06-07T14:30:29.921Z">
 <meta property="article:author" content="Echowind">
 <meta property="article:tag" content="文献">
 <meta name="twitter:card" content="summary">
@@ -360,7 +360,7 @@
 <span id="more"></span>
 <p>文章使用手机信令数据，是移动性研究最常用的数据之一。每个研究区域被划分为边长500m或1km的正方网格，同时根据夜间停留位置确定手机用户的家庭位置，这些做法和以往的研究也是类似的。但是研究用的数据集规模很大，来自四个大洲的五个国家，可以说确实是具有普适性，这也是顶刊成果的特点。</p>
 <h3 id="人口流动的距离-频率规律">人口流动的距离-频率规律</h3>
-<p>文章第一部分是介绍考虑频率的宏观移动性规律。网格<span class="math inline">\(i\)</span>的每个访问用户都具有两个属性：访问半径<span class="math inline">\(r\)</span>和访问频率<span class="math inline">\(f\)</span>。访问半径<span class="math inline">\(r\)</span>即网格<span class="math inline">\(i\)</span>到用户家庭位置的距离，实际上文中的距离<span class="math inline">\(r\)</span>代表的是以网格<span class="math inline">\(i\)</span>为圆心，半径<span class="math inline">\(r\)</span>与<span class="math inline">\(r+1\)</span>之间的环形区域。将以频率<span class="math inline">\(f\)</span>和距离<span class="math inline">\(r\)</span>访问网格<span class="math inline">\(i\)</span>的总访客流量<span class="math inline">\(N_i(r,f)\)</span>除以环的面积<span class="math inline">\(A(r)\)</span>得到流密度<span class="math inline">\(\rho_i(r,f)\)</span>，文章称为“谱流”（spectral flow）。 在固定半径增加访问频率和固定访问频率增加半径两种情况下，谱流都逐渐下降（这点是显然的），有意思的是谱流随这两个变量变化的趋势高度一致，也就是变量是对称的。于是作者尝试构造新的变量<span class="math inline">\(rf\)</span>，将谱流建模为关于<span class="math inline">\(rf\)</span>单变量的函数，对各个国家的数据拟合的效果都非常好。</p>
+<p>文章第一部分是介绍考虑频率的宏观移动性规律。网格<span class="math inline">\(i\)</span>的每个访问用户都具有两个属性：访问半径<span class="math inline">\(r\)</span>和访问频率<span class="math inline">\(f\)</span>。访问半径<span class="math inline">\(r\)</span>即网格<span class="math inline">\(i\)</span>到用户家庭位置的距离，实际上文中的距离<span class="math inline">\(r\)</span>代表的是以网格<span class="math inline">\(i\)</span>为圆心，半径<span class="math inline">\(r\)</span>与<span class="math inline">\(r+\delta r\)</span>之间的环形区域。将以频率<span class="math inline">\(f\)</span>和距离<span class="math inline">\(r\)</span>访问网格<span class="math inline">\(i\)</span>的总访客流量<span class="math inline">\(N_i(r,f)\)</span>除以环的面积<span class="math inline">\(A(r)\)</span>得到流密度<span class="math inline">\(\rho_i(r,f)\)</span>，文章称为“谱流”（spectral flow）。 在固定半径增加访问频率和固定访问频率增加半径两种情况下，谱流都逐渐下降（这点是显然的），有意思的是谱流随这两个变量变化的趋势高度一致，也就是变量是对称的。于是作者尝试构造新的变量<span class="math inline">\(rf\)</span>，将谱流建模为关于<span class="math inline">\(rf\)</span>单变量的函数，对各个国家的数据拟合的效果都非常好。</p>
 <img src="/2022/06/07/research-article-share-1/1.png" class="" title="谱流-距离频率关系">
 <p>最后这一关系可以建模为： <span class="math display">\[\rho_i(r,f) = \frac{\mu_i}{(rf)^\eta}\]</span> 这个模型非常简单，分子的常数<span class="math inline">\(\mu_i\)</span>决定了访问量的大小，因此反映的是网格<span class="math inline">\(i\)</span>的吸引力。根据标定的结果，<span class="math inline">\(\eta\)</span>大概在2左右，即谱流与<span class="math inline">\(rf\)</span>为反平方关系。后面的部分理解起来有些难度，作者进一步地用<span class="math inline">\(v:=rf\)</span>表示模型中的单变量，可以发现<span class="math inline">\(v\)</span>的量纲为距离/时间，与速度一致。把<span class="math inline">\(v\)</span>定义为用户向目的地移动的有效速度（effective velocity），再乘以研究时长，就得到了用户移动的有效距离（effective distance）。</p>
 <img src="/2022/06/07/research-article-share-1/2.png" class="" title="平均有效距离分布">
@@ -422,6 +422,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/06/08/hexo-diary-1/" rel="prev" title="Hexo建站日记（一）——访客和阅读数统计">
+                Hexo建站日记（一）——访客和阅读数统计 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -498,7 +502,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -511,7 +515,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
