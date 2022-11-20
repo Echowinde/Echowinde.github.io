@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python,深度学习,文献," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近在尝试做时间序列数据的缺失值填补，由于数据的缺失率很高（80% 以上）且这一部分预计是研究的重点和亮点，想到了用深度学习方法来做填补。在网上搜索资料发现，现有的模型很多都使用了 GAN 框架，比如 GAIN (ICML 2018)，E2GAN (NIPS 2018, IJCAI 2019)，这些都是发表在计算机顶会上的成果。后者参考资料比较多，我打算用这个框架进行尝试，这也是我第一次">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文复现———基于深度学习的多元时间序列缺失值填补E2GAN">
+<meta property="og:url" content="https://echowinde.github.io/2022/07/30/E2GAN/index.html">
+<meta property="og:site_name" content="Echowind&#39;s Blog">
+<meta property="og:description" content="最近在尝试做时间序列数据的缺失值填补，由于数据的缺失率很高（80% 以上）且这一部分预计是研究的重点和亮点，想到了用深度学习方法来做填补。在网上搜索资料发现，现有的模型很多都使用了 GAN 框架，比如 GAIN (ICML 2018)，E2GAN (NIPS 2018, IJCAI 2019)，这些都是发表在计算机顶会上的成果。后者参考资料比较多，我打算用这个框架进行尝试，这也是我第一次">
+<meta property="og:locale">
+<meta property="og:image" content="https://echowinde.github.io/2022/07/30/E2GAN/1.png">
+<meta property="article:published_time" content="2022-07-29T16:21:38.000Z">
+<meta property="article:modified_time" content="2022-07-30T09:22:25.249Z">
+<meta property="article:author" content="Echowind">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="文献">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://echowinde.github.io/2022/07/30/E2GAN/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://echowinde.github.io/2022/07/30/E2GAN/"/>
+
+
+
+
+
+  <title>论文复现———基于深度学习的多元时间序列缺失值填补E2GAN | Echowind's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1c69545fd1bf6524a6ffc11f8e89011f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Echowind's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">世界上只有一种英雄主义，就是在认清生活的真相后依然热爱生活</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            时间线
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fas fa-book"></i> <br />
+            
+            书籍
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-movies">
+          <a href="/movies/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fas fa-film"></i> <br />
+            
+            电影
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-logs">
+          <a href="/logs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fas fa-file-text"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/07/30/E2GAN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Echowind's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">论文复现———基于深度学习的多元时间序列缺失值填补E2GAN</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-07-30T00:21:38+08:00">
+                2022-07-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读次数：
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在尝试做时间序列数据的缺失值填补，由于数据的缺失率很高（80%
+以上）且这一部分预计是研究的重点和亮点，想到了用深度学习方法来做填补。在网上搜索资料发现，现有的模型很多都使用了
+GAN 框架，比如 GAIN (<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1806.02920">ICML
+2018</a>)，E2GAN (<a
+target="_blank" rel="noopener" href="https://dl.acm.org/doi/pdf/10.5555/3326943.3327090">NIPS 2018</a>,
+<a target="_blank" rel="noopener" href="https://www.ijcai.org/Proceedings/2019/0429.pdf">IJCAI
+2019</a>)，这些都是发表在计算机顶会上的成果。后者参考资料比较多，我打算用这个框架进行尝试，这也是我第一次正儿八经地做模型复现。幸运的是，我找到了论文一作的<a
+target="_blank" rel="noopener" href="https://github.com/Luoyonghong/E2EGAN">GitHub
+项目</a>，不至于从零开始。但这个项目基于 Python 2.7 和 Tensorflow
+1.7，有些陈旧了。我参考源码和论文，按个人理解用 Python 3和Pytorch
+复现了这一模型结构。</p>
+<span id="more"></span>
+<h3 id="e2gan总体框架">E2GAN总体框架</h3>
+<h4 id="模型结构">模型结构</h4>
+<p>和大部分 GAN 一样，E2GAN
+也是由一个生成器（Generator）和一个判别器（Discriminator）组成。其中，生成器的部分是一个自动编码器（Auto-Encoder）结构，原始的不完整时间序列输入
+<span class="math inline">\(x\)</span> 会被加上一个随机噪声 <span
+class="math inline">\(\eta\)</span>，送入 RNN
+网络进行编码，压缩为一个一维向量 <span
+class="math inline">\(z\)</span>，再经过 RNN
+解码，逐个时间步地生成完整序列 <span
+class="math inline">\(x^{&#39;}\)</span>。判别器的结构相对简单，对输入的数据用同样的
+RNN 结构提取特征，最后用全连接层映射到一个输出。</p>
+<img src="/2022/07/30/E2GAN/1.png" class="" title="E2GAN总体框架">
+<h4 id="损失函数">损失函数</h4>
+<p>E2GAN的损失函数参考了Wasserstein
+GAN（WGAN），但做了一些修改。具体来说，文章定义了以下几个损失：</p>
+<blockquote>
+<p>遮盖重建损失（Masked Reconstruction Loss） <span
+class="math inline">\(L_r(z)=\Vert X \odot M - G(z) \odot
+M\Vert_2\)</span><br />
+判别损失（Discriminative Loss） <span class="math inline">\(L_d(z) =
+-D(G(z))\)</span><br />
+插补损失（Imputation Loss） <span
+class="math inline">\(L_{imputation}(z) = L_r(z) + \lambda
+L_d(z)\)</span></p>
+</blockquote>
+<p>其中，插补损失即为生成器损失，相比 WGAN
+多加了一项遮盖重建损失，并使用 <span
+class="math inline">\(\lambda\)</span>
+调节大小。整个模型需要优化的判别器与生成器损失为：</p>
+<p><span class="math display">\[L_G = L_r(z) + \lambda L_d(z)\]</span>
+<span class="math display">\[L_D = D(x) - L_G\]</span></p>
+<h3 id="grui-cell">GRUI cell</h3>
+<p>可以看出，E2GAN 的生成器和判别器里都使用了同一种 RNN
+网络，是整个模型的核心。这里使用的 RNN 是作者在 NIPS 的文章中提出的
+GRUI（Gated Recurrent Unit for data Imputation），一种 GRU 的变体。</p>
+<p>GRUI 的最大改变是引入了一个 0-1 之间的时间衰减向量 <span
+class="math inline">\(\beta\)</span> 来控制历史时间步的影响。<span
+class="math inline">\(\beta\)</span> 的表达式为 <span
+class="math inline">\(\beta_{t_i}=e^{-\max (0, W_\beta
+\delta_{t_i}+b_\beta)}\)</span>，这里的 <span
+class="math inline">\(\delta\)</span> 是序列 <span
+class="math inline">\(x\)</span> 对应时间步的滞后时长（time lag）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">beta = self.beta_fc(delta)  <span class="comment"># Linear layer</span></span><br><span class="line">beta_init = torch.zeros(batch_size, seq_len, hidden_dim)</span><br><span class="line">beta = torch.exp(-torch.maximum(beta_init, beta))</span><br></pre></td></tr></table></figure>
+<p>加入 <span class="math inline">\(\beta\)</span> 后，GRUI 的计算过程与
+GRU 大同小异： <span class="math display">\[
+h^{&#39;}_{t_{i-1}} = \beta_{t_i} \odot h_{t_{i-1}} \\
+\mu_{t_i} = \sigma(W_\mu [h^{&#39;}_{t_{i-1}},x_{t_i}]+b_\mu) \\
+r_{t_i} = \sigma(W_r [h^{&#39;}_{t_{i-1}},x_{t_i}]+b_r) \\
+\tilde h_{t_i} = \tanh(W_{\tilde h} [r_{t_i} \odot
+h^{&#39;}_{t_{i-1}},x_{t_i}]+b_{\tilde h}) \\
+h_{t_i} = (1 - \mu_{t_i}) \odot h^{&#39;}_{t_{i-1}} + \mu_{t_i} \odot
+\tilde h_{t_i}
+\]</span></p>
+<p>为了方便，我与作者源码保持一致，把 <span
+class="math inline">\(\beta\)</span> 和每个时间步的输入 concat
+在了一起，所以多了一个拆分的操作。此外，由于输入的序列不定长，传入的
+batch size
+是不固定的，而隐状态的大小固定，因此将已经不需要更新的隐状态（已经超过实际序列长度）拆出来，最后再合并，代码实现如下：
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GRUI</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, input_dim, hidden_dim</span>):</span><br><span class="line">        <span class="built_in">super</span>(GRUI, self).__init__()</span><br><span class="line">        lb, ub = -np.sqrt(<span class="number">1</span> / hidden_dim), np.sqrt(<span class="number">1</span> / hidden_dim)</span><br><span class="line">        self.hidden_dim = hidden_dim</span><br><span class="line">        self.w_x = nn.ParameterList([self.__init(lb, ub, input_dim, hidden_dim) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>)])</span><br><span class="line">        self.w_h = nn.ParameterList([self.__init(lb, ub, hidden_dim, hidden_dim) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>)])</span><br><span class="line">        self.b = nn.ParameterList([self.__init(lb, ub, hidden_dim) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>)])</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init</span>(<span class="params">low, upper, dim1, dim2=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="keyword">if</span> dim2 <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> nn.Parameter(torch.rand(dim1) * (upper - low) + low)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> nn.Parameter(torch.rand(dim1, dim2) * (upper - low) + low)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, hid</span>):</span><br><span class="line">        actual_size, total_len = x.shape</span><br><span class="line">        beta = x[:, total_len - self.hidden_dim:]</span><br><span class="line">        x = x[:, :total_len - self.hidden_dim]</span><br><span class="line"></span><br><span class="line">        inactive_hid = hid[actual_size:]</span><br><span class="line">        hid = hid[:actual_size]</span><br><span class="line">        hid = torch.mul(beta, hid)</span><br><span class="line"></span><br><span class="line">        mu = torch.sigmoid(torch.mm(x, self.w_x[<span class="number">0</span>]) + torch.mm(hid, self.w_h[<span class="number">0</span>]) + self.b[<span class="number">0</span>])</span><br><span class="line">        r = torch.sigmoid(torch.mm(x, self.w_x[<span class="number">1</span>]) + torch.mm(hid, self.w_h[<span class="number">1</span>]) + self.b[<span class="number">1</span>])</span><br><span class="line">        h_tilda = torch.tanh(torch.mm(x, self.w_x[<span class="number">2</span>]) + torch.mm(torch.mul(r, hid), self.w_h[<span class="number">2</span>]) + self.b[<span class="number">2</span>])</span><br><span class="line">        next_hid = torch.mul((<span class="number">1</span> - mu), hid) + torch.mul(mu, h_tilda)</span><br><span class="line">        next_hid = torch.cat([next_hid, inactive_hid], <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> next_hid</span><br></pre></td></tr></table></figure></p>
+<h3 id="encoder">Encoder</h3>
+<p>Encoder 的作用是在生成器中把原始输入压缩为向量 <span
+class="math inline">\(z\)</span>，具体步骤包括添加噪声 <span
+class="math inline">\(\eta\)</span>、计算 <span
+class="math inline">\(\beta\)</span>、输入 GRUI
+网络，将最后的隐状态通过线性层映射到 <span
+class="math inline">\(z\)</span>。<code>pack_padded_sequence</code>操作也写在了这里来处理不定长序列。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Encoder</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="built_in">super</span>(Encoder, self).__init__()</span><br><span class="line">        self.hidden_dim = config.g_hidden_dim</span><br><span class="line">        self.config = config</span><br><span class="line">        self.beta_fc = nn.Linear(config.input_dim, config.g_hidden_dim)</span><br><span class="line">        self.output_fc = nn.Linear(config.g_hidden_dim, config.z_dim)</span><br><span class="line">        self.grui_cell = GRUI(config.input_dim, config.g_hidden_dim)</span><br><span class="line">        self.dropout = nn.Dropout(config.dropout_prob)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, delta, length</span>):</span><br><span class="line">        batch_size, seq_len, input_dim = x.shape</span><br><span class="line">        eta = torch.normal(mean=<span class="number">0.0</span>, std=<span class="number">0.01</span>, size=x.shape)</span><br><span class="line">        x = x + eta</span><br><span class="line">        x = x.reshape(-<span class="number">1</span>, input_dim)</span><br><span class="line">        delta = delta.reshape(-<span class="number">1</span>, input_dim)  <span class="comment"># -&gt; batch_size*seq_len, input_dim</span></span><br><span class="line"></span><br><span class="line">        beta = self.beta_fc(delta)</span><br><span class="line">        beta_init = torch.zeros(delta.shape[<span class="number">0</span>], self.hidden_dim).to(self.config.device)</span><br><span class="line">        beta = torch.exp(-torch.maximum(beta_init, beta))</span><br><span class="line"></span><br><span class="line">        x = torch.cat([x, beta], <span class="number">1</span>)  <span class="comment"># -&gt; batch_size*seq_len, input_dim+hidden_dim</span></span><br><span class="line">        x_in = x.reshape(batch_size, seq_len, input_dim + self.hidden_dim)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># pack</span></span><br><span class="line">        packed = pack_padded_sequence(x_in, length, batch_first=<span class="literal">True</span>)</span><br><span class="line">        x_in = packed.data  <span class="comment"># total_size, input_dim+self.hidden_dim</span></span><br><span class="line">        sizes = packed.batch_sizes</span><br><span class="line"></span><br><span class="line">        hidden = torch.zeros(batch_size, self.hidden_dim).to(self.config.device)</span><br><span class="line">        start_idx = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> size <span class="keyword">in</span> sizes:</span><br><span class="line">            x_step = x_in[start_idx: start_idx + size]</span><br><span class="line">            hidden = self.grui_cell(x_step, hidden)</span><br><span class="line">            start_idx += size</span><br><span class="line"></span><br><span class="line">        hidden = self.dropout(hidden)</span><br><span class="line">        z_output = self.output_fc(hidden)  <span class="comment"># batch_size, z_dim</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> z_output, sizes</span><br></pre></td></tr></table></figure></p>
+<h3 id="generator">Generator</h3>
+<p>封装了 GRUI 和 Encoder 之后，生成器的结构就比较简单了。将输入压缩到
+<span class="math inline">\(z\)</span> 之后，输入另一个 GRUI
+网络，从第一个时间步开始进行序列生成。需要注意的是这里 GRUI 使用的 <span
+class="math inline">\(\beta\)</span> 与 Encoder 中不同，是通过完整数据的
+<span class="math inline">\(\delta_{imputed}\)</span>
+计算而来的，即相邻元素的差等于时间戳间隔。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Generator</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="built_in">super</span>(Generator, self).__init__()</span><br><span class="line">        self.hidden_dim = config.g_hidden_dim</span><br><span class="line">        self.config = config</span><br><span class="line">        self.z_fc = nn.Linear(config.z_dim, config.input_dim)</span><br><span class="line">        self.beta_fc = nn.Linear(config.input_dim, config.g_hidden_dim)</span><br><span class="line">        self.output_fc = nn.Linear(config.g_hidden_dim, config.input_dim)</span><br><span class="line">        self.series_to_z = Encoder(config)</span><br><span class="line">        self.grui_cell = GRUI(config.input_dim, config.g_hidden_dim)</span><br><span class="line">        self.dropout = nn.Dropout(config.dropout_prob)</span><br><span class="line">        self.bn = nn.BatchNorm1d(config.seq_len)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, delta, imputed_delta, length</span>):</span><br><span class="line">        batch_size, seq_len, input_dim = x.shape</span><br><span class="line">        z, sizes = self.series_to_z(x, delta, length)  <span class="comment"># batch_size, z_dim</span></span><br><span class="line"></span><br><span class="line">        x = self.z_fc(z)</span><br><span class="line">        x = x.reshape(-<span class="number">1</span>, input_dim)  <span class="comment"># batch_size, input_dim</span></span><br><span class="line">        delta_zero = torch.zeros(batch_size, input_dim).to(self.config.device)</span><br><span class="line"></span><br><span class="line">        beta = self.beta_fc(delta_zero)</span><br><span class="line">        beta_init = torch.zeros(delta_zero.shape[<span class="number">0</span>], self.hidden_dim).to(self.config.device)</span><br><span class="line">        beta = torch.exp(-torch.maximum(beta_init, beta))  <span class="comment"># batch_size*seq_len, hidden_dim</span></span><br><span class="line">        x = torch.cat([x, beta], <span class="number">1</span>)</span><br><span class="line">        x_in = x.reshape(-<span class="number">1</span>, input_dim + self.hidden_dim)  <span class="comment"># first step input</span></span><br><span class="line"></span><br><span class="line">        hidden = torch.zeros(batch_size, self.hidden_dim).to(self.config.device)</span><br><span class="line">        hidden = self.grui_cell(x_in, hidden)</span><br><span class="line">        hidden = self.dropout(hidden)</span><br><span class="line"></span><br><span class="line">        out_predict = self.output_fc(hidden)</span><br><span class="line">        out_predict = out_predict.reshape(-<span class="number">1</span>, <span class="number">1</span>, input_dim)  <span class="comment"># -&gt; batch_size, 1, hidden_dim</span></span><br><span class="line">        total_result = torch.mul(out_predict, <span class="number">1.0</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, seq_len):</span><br><span class="line">            out_predict = out_predict.reshape(batch_size, input_dim)</span><br><span class="line">            <span class="keyword">if</span> i &lt; <span class="built_in">len</span>(sizes):</span><br><span class="line">                actual_size = sizes[i]</span><br><span class="line">                delta_normal = imputed_delta[:actual_size, i:(i + <span class="number">1</span>), :].reshape(actual_size, input_dim)</span><br><span class="line"></span><br><span class="line">                beta = self.beta_fc(delta_normal)</span><br><span class="line">                beta_init = torch.zeros(delta_normal.shape[<span class="number">0</span>], self.hidden_dim).to(self.config.device)</span><br><span class="line">                beta = torch.exp(-torch.maximum(beta_init, beta))  <span class="comment"># actual_size*seq_len, hidden_dim</span></span><br><span class="line"></span><br><span class="line">                done_predict = out_predict[actual_size:]</span><br><span class="line">                out_predict = out_predict[:actual_size]</span><br><span class="line"></span><br><span class="line">                x = torch.cat([out_predict, beta], <span class="number">1</span>)  <span class="comment"># -&gt; actual_size, input_dim+hidden_dim</span></span><br><span class="line">                x_in = x.reshape(-<span class="number">1</span>, input_dim + self.hidden_dim)  <span class="comment"># -&gt; actual_size, input_dim+hidden_dim</span></span><br><span class="line"></span><br><span class="line">                hidden = self.grui_cell(x_in, hidden)</span><br><span class="line">                hidden = hidden[:actual_size]</span><br><span class="line">                hidden = self.dropout(hidden)</span><br><span class="line"></span><br><span class="line">                out_predict = self.output_fc(hidden)</span><br><span class="line">                out_predict = torch.cat([out_predict, done_predict])</span><br><span class="line">                out_predict = out_predict.reshape(-<span class="number">1</span>, <span class="number">1</span>, input_dim)  <span class="comment"># -&gt; actual_size, 1, input_dim</span></span><br><span class="line">                total_result = torch.cat([total_result, out_predict], <span class="number">1</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                pad = torch.zeros(batch_size, seq_len - <span class="built_in">len</span>(sizes), input_dim).to(self.config.device)</span><br><span class="line">                total_result = torch.cat([total_result, pad], <span class="number">1</span>)  <span class="comment"># batch_size, seq_len, input_dim</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.config.is_bn:</span><br><span class="line">            total_result = self.bn(total_result)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> total_result</span><br></pre></td></tr></table></figure></p>
+<h3 id="discriminator">Discriminator</h3>
+<p>判别器的结构比较简单，和 Encoder 类似，最后的线性层把输入序列映射到
+batch size*1，由于采用了 WGAN loss，输出不需要加入 sigmoid 层。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Discriminator</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="built_in">super</span>(Discriminator, self).__init__()</span><br><span class="line">        self.hidden_dim = config.d_hidden_dim</span><br><span class="line">        self.config = config</span><br><span class="line">        self.beta_fc = nn.Linear(config.input_dim, config.d_hidden_dim)</span><br><span class="line">        self.output_fc = nn.Linear(config.d_hidden_dim, <span class="number">1</span>)</span><br><span class="line">        self.grui_cell = GRUI(config.input_dim, config.d_hidden_dim)</span><br><span class="line">        self.dropout = nn.Dropout(config.dropout_prob)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, delta, length</span>):</span><br><span class="line">        batch_size, seq_len, input_dim = x.shape</span><br><span class="line">        x = x.reshape(-<span class="number">1</span>, input_dim)  <span class="comment"># batch_size*seq_len, input_dim</span></span><br><span class="line">        delta = delta.reshape(-<span class="number">1</span>, input_dim)  <span class="comment"># batch_size*seq_len, input_dim</span></span><br><span class="line"></span><br><span class="line">        beta = self.beta_fc(delta)</span><br><span class="line">        beta_init = torch.zeros(delta.shape[<span class="number">0</span>], self.hidden_dim).to(self.config.device)</span><br><span class="line">        beta = torch.exp(-torch.maximum(beta_init, beta))  <span class="comment"># batch_size*seq_len, hidden_dim</span></span><br><span class="line"></span><br><span class="line">        x = torch.cat([x, beta], <span class="number">1</span>)  <span class="comment"># batch_size*seq_len, input_dim+hidden_dim</span></span><br><span class="line">        x_in = x.reshape(batch_size, seq_len, input_dim + self.hidden_dim)</span><br><span class="line"></span><br><span class="line">        packed = pack_padded_sequence(x_in, length, batch_first=<span class="literal">True</span>)</span><br><span class="line">        x_in = packed.data  <span class="comment"># total_size, input_dim+self.hidden_dim</span></span><br><span class="line">        sizes = packed.batch_sizes</span><br><span class="line">        hidden = torch.zeros(sizes[<span class="number">0</span>], self.hidden_dim).to(self.config.device)</span><br><span class="line">        start_idx = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> size <span class="keyword">in</span> sizes:</span><br><span class="line">            x_step = x_in[start_idx: start_idx + size]</span><br><span class="line">            hidden = self.grui_cell(x_step, hidden)</span><br><span class="line">            start_idx += size</span><br><span class="line"></span><br><span class="line">        hidden = self.dropout(hidden)</span><br><span class="line">        output = self.output_fc(hidden)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure></p>
+<h3 id="总结">总结</h3>
+<p>有作者源码的参考，复现整个模型结构并没有花费很多时间，反倒是后续调整输入、改
+bug 浪费了大量时间。但尽管投入了很多精力去调整模型，E2GAN
+在我的数据集上效果也并不好，甚至可以说非常差，生成器对原始输入的拟合效果不佳，遮盖重建损失下降缓慢。这其中可能有部分原因是我对
+Tensorflow 不熟悉，在代码迁移的过程中有隐藏的 bug
+没有发现，但整个模型也存在很多我觉得不合理的地方。例如，Encoder
+只取了最后而不是每个时间步的隐状态为输出，一个一维的向量 <span
+class="math inline">\(z\)</span>
+可能很难提取出整个序列的特征；生成器逐个时间步生成序列，每个时间步过一次
+GRUI 和同一个线性层，线性层的权重更新混乱，后续时间步也缺少 <span
+class="math inline">\(z\)</span>
+的信息等等。事实上，我在其他的模型中，用作者提出的 GRUI 代替原本的 GRU
+和 LSTM 确实得到了更好的结构，因此，至少 Github
+上这个版本的源码的模型结构可能存在问题。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          
+            <a href="/tags/%E6%96%87%E7%8C%AE/" rel="tag"># 文献</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/07/06/first-year-summary/" rel="next" title="学期结束碎碎念">
+                <i class="fa fa-chevron-left"></i> 学期结束碎碎念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/08/17/hexo-diary-3/" rel="prev" title="Hexo建站日记（三）——添加个人豆瓣主页">
+                Hexo建站日记（三）——添加个人豆瓣主页 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Echowinde" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#e2gan%E6%80%BB%E4%BD%93%E6%A1%86%E6%9E%B6"><span class="nav-number">1.</span> <span class="nav-text">E2GAN总体框架</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">模型结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">损失函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#grui-cell"><span class="nav-number">2.</span> <span class="nav-text">GRUI cell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#encoder"><span class="nav-number">3.</span> <span class="nav-text">Encoder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#generator"><span class="nav-number">4.</span> <span class="nav-text">Generator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#discriminator"><span class="nav-number">5.</span> <span class="nav-text">Discriminator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Echowind</span>
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span id="busuanzi_container_site_uv" style='display:none'>
+      <i class="fa fa-user"></i>
+      <span id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span id="busuanzi_container_site_pv" style='display:none'>
+      <i class="fa fa-eye"></i>
+      <span id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src=""></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

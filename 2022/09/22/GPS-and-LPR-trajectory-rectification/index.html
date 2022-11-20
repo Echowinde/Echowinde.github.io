@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python,时空数据," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="GPS漂移处理 GPS 轨迹点的漂移，最常见于当车辆进入隧道等 GPS 信号弱的区间时，本该位于区间内的 GPS 定位点却停留在入口处，而等到车辆驶出区间后，GPS 点又瞬移到出口处。这种情况下，我们利用 GPS 数据计算车速时会出现区间内速度为 0，出口处又严重超速的现象，且车辆定位不准确同样影响会空间分析的结果，因此，需要进行修正。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GPS和LPR轨迹数据的纠偏">
+<meta property="og:url" content="https://echowinde.github.io/2022/09/22/GPS-and-LPR-trajectory-rectification/index.html">
+<meta property="og:site_name" content="Echowind&#39;s Blog">
+<meta property="og:description" content="GPS漂移处理 GPS 轨迹点的漂移，最常见于当车辆进入隧道等 GPS 信号弱的区间时，本该位于区间内的 GPS 定位点却停留在入口处，而等到车辆驶出区间后，GPS 点又瞬移到出口处。这种情况下，我们利用 GPS 数据计算车速时会出现区间内速度为 0，出口处又严重超速的现象，且车辆定位不准确同样影响会空间分析的结果，因此，需要进行修正。">
+<meta property="og:locale">
+<meta property="og:image" content="https://echowinde.github.io/2022/09/22/GPS-and-LPR-trajectory-rectification/1.png">
+<meta property="og:image" content="https://echowinde.github.io/2022/09/22/GPS-and-LPR-trajectory-rectification/2.png">
+<meta property="article:published_time" content="2022-09-22T06:40:23.000Z">
+<meta property="article:modified_time" content="2022-09-22T09:36:51.297Z">
+<meta property="article:author" content="Echowind">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="时空数据">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://echowinde.github.io/2022/09/22/GPS-and-LPR-trajectory-rectification/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://echowinde.github.io/2022/09/22/GPS-and-LPR-trajectory-rectification/"/>
+
+
+
+
+
+  <title>GPS和LPR轨迹数据的纠偏 | Echowind's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1c69545fd1bf6524a6ffc11f8e89011f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Echowind's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">世界上只有一种英雄主义，就是在认清生活的真相后依然热爱生活</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            时间线
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fas fa-book"></i> <br />
+            
+            书籍
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-movies">
+          <a href="/movies/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fas fa-film"></i> <br />
+            
+            电影
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-logs">
+          <a href="/logs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fas fa-file-text"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/09/22/GPS-and-LPR-trajectory-rectification/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Echowind's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">GPS和LPR轨迹数据的纠偏</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-22T14:40:23+08:00">
+                2022-09-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读次数：
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="gps漂移处理">GPS漂移处理</h3>
+<p>GPS 轨迹点的漂移，最常见于当车辆进入隧道等 GPS
+信号弱的区间时，本该位于区间内的 GPS
+定位点却停留在入口处，而等到车辆驶出区间后，GPS
+点又瞬移到出口处。这种情况下，我们利用 GPS
+数据计算车速时会出现区间内速度为
+0，出口处又严重超速的现象，且车辆定位不准确同样影响会空间分析的结果，因此，需要进行修正。</p>
+<img src="/2022/09/22/GPS-and-LPR-trajectory-rectification/1.png" class="" title="GPS 出现漂移的位置分布">
+<span id="more"></span>
+<p>对于这类偏移，很直接的思路是将车辆看作以匀速通过区间，把 GPS
+定位点按等间隔还原到轨迹上。首先需要找到 GPS
+发生漂移的位置（出口处的第一个数据点），从该点向前倒推，将停滞在同一位置不动的点找出来。以它们与出口的距离作为待分配位移，以这些点的总间隔时间为待分配时间，求出通过区间的平均速度，最后根据时间戳为每个停滞点分配对应的位移。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">tunnel_gps_rectification</span>(<span class="params">points, cal_distance, t</span>):</span><br><span class="line">    geom = LineString(points)  <span class="comment"># 原始轨迹点序列</span></span><br><span class="line">    mileage = [cal_distance(points[i-<span class="number">1</span>], points[i]) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(points))]  <span class="comment"># cal_distance为两点间距离函数</span></span><br><span class="line">    mileage.insert(<span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">    mileage = np.array(mileage).cumsum()</span><br><span class="line">    </span><br><span class="line">    speed = np.diff(mileage) / np.diff(t)</span><br><span class="line">    overspeed_idxs = np.where(speed &gt; <span class="number">41.67</span>)[<span class="number">0</span>]  <span class="comment"># 超速筛选阈值，这里用150km/h</span></span><br><span class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> overspeed_idxs:</span><br><span class="line">        start_mileage = mileage[idx]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(idx, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> start_mileage - mileage[i] &lt; <span class="number">1</span>:  <span class="comment"># 位移小于1m的点认为停滞</span></span><br><span class="line">                trace = i</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">        mileage_to_allocate = mileage[idx+<span class="number">1</span>] - mileage[trace]</span><br><span class="line">        time_to_allocate = t[idx+<span class="number">1</span>] - t[trace]</span><br><span class="line">        avg_speed = mileage_to_allocate/time_to_allocate</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(trace+<span class="number">1</span>, idx+<span class="number">1</span>):</span><br><span class="line">            mileage[i] = mileage[i-<span class="number">1</span>] + avg_speed * (t[i]-t[i-<span class="number">1</span>])</span><br><span class="line">            </span><br><span class="line">    new_points = [geom.interpolate(loc, normalized=<span class="literal">False</span>).coords[<span class="number">0</span>] <span class="keyword">for</span> loc <span class="keyword">in</span> mileage]  </span><br><span class="line">    <span class="keyword">return</span> new_points </span><br></pre></td></tr></table></figure>
+<p>函数的入参<code>points</code>可以直接使用原始 GPS
+轨迹序列，但在GPS定位精度不足或采样频率太低的情况下，有条件应考虑先对轨迹数据进行地图匹配，如使用基于隐马尔可夫模型的<a
+target="_blank" rel="noopener" href="https://leuvenmapmatching.readthedocs.io/en/latest/">leuvenmapmatching</a>等算法以获取精确的轨迹点位置和位移。</p>
+<h3 id="lpr与gps的轨迹融合">LPR与GPS的轨迹融合</h3>
+<p>LPR (License Plate Recognition) 数据样本量大但采样频率低，而 GPS
+数据采样频率高但样本量少。因此我的一个 idea 是尝试融合两类数据，并用 LPR
+数据还原出 GPS 轨迹的特征。但实际中将同一辆车的 GPS 与 LPR
+数据按照时间戳进行直接拼接，往往会产生很多问题，比如在轨迹中出现异常的折返，如下图：</p>
+<img src="/2022/09/22/GPS-and-LPR-trajectory-rectification/2.png" class="" title="融合轨迹的异常折返（红色为 GPS 数据点，蓝色为 LPR 数据点）">
+<p>同样会导致速度计算的异常。有多种原因可能产生这种折返现象：<br />
+- LPR 系统与 GPS 系统的时钟不同步<br />
+- LPR
+过车数据实际上记录的是车辆通过停车线的时间，而停车线位置与设备位置不完全相同<br />
+- 同上述原因，可能有车辆在路口停车时已经超出停车线，产生错误记录</p>
+<p>由于 LPR 设备位置是稳定的，不存在像 GPS
+的偏移情况，因此解决这个问题可以通过固定 LPR
+记录的位置，而调整对应的时间戳，使得其与 GPS
+数据更好地融合。算法的思路是以每条 LPR
+记录的原始时间戳为中心，定义一个时间窗，并在窗内前后移动时间戳。最终，找到某个时间戳使得
+LPR 数据点与其前后两个 GPS 数据点形成的折线距离最小（轨迹最顺滑），且
+LPR 点到前后 GPS 点的两段平均速度与两个 GPS 点间的平均速度最为接近。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">adjust_lpr_timestamp</span>(<span class="params">lpr_timestamp, lpr_idx, gps_t, gps_point, lpr_point, cal_distance, tw=<span class="number">30</span></span>):</span><br><span class="line">    results = []</span><br><span class="line">    <span class="keyword">for</span> moving_timestamp <span class="keyword">in</span> <span class="built_in">range</span>(lpr_timestamp-tw, lpr_timestamp+tw+<span class="number">1</span>):</span><br><span class="line">        indexs = np.where(moving_timestamp &lt;= gps_t)[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(indexs) == <span class="number">0</span>:  <span class="comment"># LPR点是轨迹点序列的最后一个</span></span><br><span class="line">            right_idx = <span class="built_in">len</span>(gps_t) - <span class="number">1</span></span><br><span class="line">            left_idx = right_idx - <span class="number">1</span></span><br><span class="line">            gps_dist = cal_distance(gps_point[left_idx], gps_point[right_idx])</span><br><span class="line">            lpr_dist = cal_distance(gps_point[right_idx], lpr_point[lpr_idx])</span><br><span class="line">            mileage = gps_dist + lpr_dist</span><br><span class="line">            <span class="keyword">if</span> (moving_timestamp - gps_t[right_idx]) == <span class="number">0</span>:  <span class="comment"># LPR与GPS时间戳重叠</span></span><br><span class="line">                lpr_speed_1, lpr_speed_2 = <span class="number">9999</span>, <span class="number">9999</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                lpr_speed_1 = lpr_dist / (moving_timestamp - gps_t[right_idx])</span><br><span class="line">                lpr_speed_2 = lpr_speed_1</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            right_idx = indexs[<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">if</span> right_idx == <span class="number">0</span>:  <span class="comment"># LPR点是轨迹点序列的第一个</span></span><br><span class="line">                left_idx = <span class="number">0</span></span><br><span class="line">                right_idx = <span class="number">1</span></span><br><span class="line">                gps_dist = cal_distance(gps_point[left_idx], gps_point[right_idx])</span><br><span class="line">                lpr_dist = cal_distance(lpr_point[lpr_idx], gps_point[left_idx])</span><br><span class="line">                mileage = lpr_dist + gps_dist</span><br><span class="line">                <span class="keyword">if</span> (gps_t[left_idx] - moving_timestamp) == <span class="number">0</span>:</span><br><span class="line">                    lpr_speed_1, lpr_speed_2 = <span class="number">9999</span>, <span class="number">9999</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    lpr_speed_1 = lpr_dist / (gps_t[left_idx] - moving_timestamp)</span><br><span class="line">                    lpr_speed_2 = lpr_speed_1</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                left_idx = right_idx - <span class="number">1</span></span><br><span class="line">                gps_dist = cal_distance(gps_point[left_idx], gps_point[right_idx])</span><br><span class="line">                lpr_dist_1 = cal_distance(gps_point[left_idx], lpr_point[lpr_idx])</span><br><span class="line">                lpr_dist_2 = cal_distance(lpr_point[lpr_idx], gps_point[right_idx])</span><br><span class="line">                mileage = lpr_dist_1 + lpr_dist_2</span><br><span class="line">                <span class="keyword">if</span> (moving_timestamp - gps_t[left_idx] == <span class="number">0</span>) <span class="keyword">or</span> (gps_t[right_idx] - moving_timestamp == <span class="number">0</span>):</span><br><span class="line">                    lpr_speed_1, lpr_speed_2 = <span class="number">9999</span>, <span class="number">9999</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    lpr_speed_1 = lpr_dist_1 / (moving_timestamp - gps_t[left_idx])</span><br><span class="line">                    lpr_speed_2 = lpr_dist_2 / (gps_t[right_idx] - moving_timestamp)</span><br><span class="line">        gps_speed = gps_dist / (gps_t[right_idx] - gps_t[left_idx])</span><br><span class="line">        speed_diff = <span class="built_in">abs</span>(gps_speed - lpr_speed_1) + <span class="built_in">abs</span>(gps_speed - lpr_speed_2)  <span class="comment"># GPS与LPR速度差</span></span><br><span class="line">        results.append([mileage, speed_diff])</span><br><span class="line">    results = np.array(results) </span><br><span class="line">    adjust_idx = np.lexsort((results[:,<span class="number">0</span>], results[:,<span class="number">1</span>]))[<span class="number">0</span>]  <span class="comment"># 按最小位移和最小速度差排序</span></span><br><span class="line">    <span class="keyword">return</span> lpr_timestamp - tw + adjust_idx</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/%E6%97%B6%E7%A9%BA%E6%95%B0%E6%8D%AE/" rel="tag"># 时空数据</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/08/23/my-2019-pre-epidemic-memory/" rel="next" title="疫情前的记忆——我的2019">
+                <i class="fa fa-chevron-left"></i> 疫情前的记忆——我的2019
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/10/15/to_zjl/" rel="prev" title="To ZJL">
+                To ZJL <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Echowinde" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#gps%E6%BC%82%E7%A7%BB%E5%A4%84%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">GPS漂移处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lpr%E4%B8%8Egps%E7%9A%84%E8%BD%A8%E8%BF%B9%E8%9E%8D%E5%90%88"><span class="nav-number">2.</span> <span class="nav-text">LPR与GPS的轨迹融合</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Echowind</span>
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span id="busuanzi_container_site_uv" style='display:none'>
+      <i class="fa fa-user"></i>
+      <span id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span id="busuanzi_container_site_pv" style='display:none'>
+      <i class="fa fa-eye"></i>
+      <span id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
