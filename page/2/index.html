@@ -289,6 +289,265 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/06/12/hexo-diary-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Echowind's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/06/12/hexo-diary-2/" itemprop="url">Hexo建站日记（二）——在文章中显示数学公式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-06-12T12:47:47+08:00">
+                2022-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>为了帮助理解，我在那篇 Nature
+文献分享的博文里加入了几个数学公式。经过优化算法课的锤炼，我打这些 LaTex
+公式已经轻车熟路，比我做 PPT 用的 MathType
+可舒服多了。但当我写好博文用<code>hexo s</code>进行本地预览的时候发现，原本在我的
+Markdown 编辑器上能够预览的公式，都无法在网页上正常渲染出来。</p>
+<p>在网上查找了一些资料，发现原因是 Hexo 的自带的渲染引擎 marked.js
+并不支持显示 LaTeX 公式，解决的方法就是更换渲染引擎，比如使用 MathJax 和
+KaTex。这两种引擎在 Next 主题中都已经支持，其中 MathJax 的速度比 KaTex
+更慢但支持更好，这里以前者为例介绍使用方法。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2022/06/12/hexo-diary-2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/06/08/hexo-diary-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Echowind's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/06/08/hexo-diary-1/" itemprop="url">Hexo建站日记（一）——访客和阅读数统计</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-06-08T14:43:11+08:00">
+                2022-06-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>之前给博客添加了在页脚显示访客人数和文章阅读量的功能，于是打算就此开一个系列，详细地记录我的博客的搭建过程，拟了这第一篇建站日记。因为一直没有时间把它补充完整，这篇草稿在文件夹里躺了好几周，越来越觉得碍眼<del>（强迫症）</del>，终于逼着自己把它写完发出来。把之前做一半的事情重新拾掇起来并不是一件舒服的事，希望以后能一开始就坚持下来，加油！</p>
+<h3 id="访客和阅读统计">访客和阅读统计</h3>
+<p>大部分静态博客的访客统计使用的都是<a
+target="_blank" rel="noopener" href="http://ibruce.info/2015/04/04/busuanzi/">不蒜子（busuanzi）</a>，一个轻量级的计数服务，可以将计数直接显示在博客的页脚。不蒜子的引入有两种方法，最好不要同时使用，避免出现冲突。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2022/06/08/hexo-diary-1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/06/07/research-article-share-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -843,7 +1102,7 @@ post 在这上面，顺便用 hexo-douban
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -903,7 +1162,7 @@ post 在这上面，顺便用 hexo-douban
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+        <div class="copyright">&copy; 2022 &mdash; <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
