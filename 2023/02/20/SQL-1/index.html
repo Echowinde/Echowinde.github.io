@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo," />
+  <meta name="keywords" content="SQL," />
 
 
 
@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="在博客里集成豆瓣主页是我从一开始就想做的功能，在这里感谢 hexo-douban 的作者 Mythsman 为我们开发了这样一个简单又实用的插件，他的女朋友居然还是我的校友 hhh。从他的博文里，能看出他不仅是一个很有技术力的大佬，也是一个热爱生活、内心细腻且有担当的人。">
+<meta name="description" content="Question 给定一个表 tree，id 是树节点的编号，p_id 是它父节点的 id 。 123456789+----+------+| id | p_id |+----+------+| 1  | null || 2  | 1    || 3  | 1    || 4  | 2    || 5  | 2    |+----+------+ 树中每个节点属于以下三种类型之一： - 叶">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo建站日记（三）——添加个人豆瓣主页">
-<meta property="og:url" content="https://echowinde.github.io/2022/08/17/hexo-diary-3/index.html">
+<meta property="og:title" content="SQL笔记（一） - LC608 &#x2F; CASE &#x2F; IF">
+<meta property="og:url" content="https://echowinde.github.io/2023/02/20/SQL-1/index.html">
 <meta property="og:site_name" content="Echowind&#39;s Blog">
-<meta property="og:description" content="在博客里集成豆瓣主页是我从一开始就想做的功能，在这里感谢 hexo-douban 的作者 Mythsman 为我们开发了这样一个简单又实用的插件，他的女朋友居然还是我的校友 hhh。从他的博文里，能看出他不仅是一个很有技术力的大佬，也是一个热爱生活、内心细腻且有担当的人。">
+<meta property="og:description" content="Question 给定一个表 tree，id 是树节点的编号，p_id 是它父节点的 id 。 123456789+----+------+| id | p_id |+----+------+| 1  | null || 2  | 1    || 3  | 1    || 4  | 2    || 5  | 2    |+----+------+ 树中每个节点属于以下三种类型之一： - 叶">
 <meta property="og:locale">
-<meta property="article:published_time" content="2022-08-17T13:50:07.000Z">
-<meta property="article:modified_time" content="2022-08-18T09:02:15.379Z">
+<meta property="article:published_time" content="2023-02-20T12:29:50.000Z">
+<meta property="article:modified_time" content="2023-02-21T11:23:35.127Z">
 <meta property="article:author" content="Echowind">
-<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="SQL">
 <meta name="twitter:card" content="summary">
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://echowinde.github.io/2022/08/17/hexo-diary-3/"/>
+  <link rel="canonical" href="https://echowinde.github.io/2023/02/20/SQL-1/"/>
 
 
 
 
 
-  <title>Hexo建站日记（三）——添加个人豆瓣主页 | Echowind's Blog</title>
+  <title>SQL笔记（一） - LC608 / CASE / IF | Echowind's Blog</title>
   
 
 
@@ -293,7 +293,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/08/17/hexo-diary-3/">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/02/20/SQL-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -310,7 +310,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hexo建站日记（三）——添加个人豆瓣主页</h1>
+          <h1 class="post-title" itemprop="name headline">SQL笔记（一） - LC608 / CASE / IF</h1>
         
 
         <div class="post-meta">
@@ -322,8 +322,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-08-17T21:50:07+08:00">
-                2022-08-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-20T20:29:50+08:00">
+                2023-02-20
               </time>
             
 
@@ -365,63 +365,46 @@
       
 
       
-        <p>在博客里集成豆瓣主页是我从一开始就想做的功能，在这里感谢 hexo-douban
-的作者 <a target="_blank" rel="noopener" href="https://blog.mythsman.com/">Mythsman</a>
-为我们开发了这样一个简单又实用的插件，他的女朋友居然还是我的校友
-hhh。从他的博文里，能看出他不仅是一个很有技术力的大佬，也是一个热爱生活、内心细腻且有担当的人。</p>
+        <h3 id="question">Question</h3>
+<p>给定一个表 <code>tree</code>，<strong>id</strong>
+是树节点的编号，<strong>p_id</strong> 是它父节点的 id 。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+----+------+</span><br><span class="line">| id | p_id |</span><br><span class="line">+----+------+</span><br><span class="line">| 1  | null |</span><br><span class="line">| 2  | 1    |</span><br><span class="line">| 3  | 1    |</span><br><span class="line">| 4  | 2    |</span><br><span class="line">| 5  | 2    |</span><br><span class="line">+----+------+</span><br></pre></td></tr></table></figure>
+树中每个节点属于以下三种类型之一： -
+叶子：如果这个节点没有任何孩子节点。 -
+根：如果这个节点是整棵树的根，即没有父节点。 -
+内部节点：如果这个节点既不是叶子节点也不是根节点。</p>
+<p>写一个查询语句，输出所有节点的编号和节点的类型，并将结果按照节点编号排序。</p>
 <span id="more"></span>
-<h3 id="安装和配置插件">安装和配置插件</h3>
-<p>在博客根目录下使用 npm
-命令<code>npm install hexo-douban --save</code>进行安装。之后，在博客配置文件<code>/_config.yml</code>中，添加以下配置：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">douban:</span><br><span class="line">  user: xxxxxx</span><br><span class="line">  builtin: false</span><br><span class="line">  book:</span><br><span class="line">    title: &#x27;阅读&#x27;</span><br><span class="line">    quote: &#x27;书到读时才有光&#x27;</span><br><span class="line">  movie:</span><br><span class="line">    title: &#x27;电影&#x27;</span><br><span class="line">    quote: &#x27;火车上的旅程&#x27;</span><br><span class="line">  game:</span><br><span class="line">    title: &#x27;This is my game title&#x27;</span><br><span class="line">    quote: &#x27;This is my game quote&#x27;</span><br><span class="line">  timeout: 10000</span><br></pre></td></tr></table></figure> user: 在豆瓣的个人主页查看地址栏的
-URL，如："https://www.douban.com/people/xxxxxx/"，将 "xxxxxx"
-填在这里<br />
-builtin:
-是否将生成页面的功能嵌入<code>hexo s</code>和<code>hexo g</code>中，若设置为
-true 则每次使用上述命令都会自动更新博客的豆瓣页面<br />
-title: 页面的标题<br />
-quote: 页面的引子，会显示在标题的下方，条目列表的上方<br />
-timeout: 爬取数据的超时时间，单位 ms<br />
-不需要显示的主页内容可以直接注释掉，例如我的博客就没有游戏页面。当
-builtin 选项为默认的 false 时，需要使用命令手动生成页面：
-<code>hexo douban -bgm</code>，参数<code>-b</code>、<code>-g</code>、<code>-m</code>分别代表生成书籍、游戏和电影页面，可根据需求自行选择。</p>
+<h3 id="solution">Solution</h3>
+<p>一开始想的是一个比较直接的逻辑，即<code>JOIN</code>出一个包括每个节点的父节点和子节点的大表，再直接判断，类似于：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+----+------+------+</span><br><span class="line">| id | p_id | c_id |</span><br><span class="line">+----+------+------+</span><br><span class="line">| 1  | null | 2    |</span><br><span class="line">| 2  | 1    | 4    |</span><br><span class="line">| 3  | 1    | null |</span><br><span class="line">| 4  | 2    | null |</span><br><span class="line">| 5  | 2    | null |</span><br><span class="line">+----+------+------+</span><br></pre></td></tr></table></figure>
+很快发现这样很难写出来，主要是子节点的处理很麻烦。但事实上我们不需要真正去求子节点，<strong>p_id</strong>
+中出现的 id
+即为非叶节点，反之为叶节点，非叶节点的子节点并不重要。于是把原表和非叶节点做连接，根据
+<strong>t2.p_id</strong> 是否为 <code>NULL</code> 判断叶节点：
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> t1.id, (</span><br><span class="line">    <span class="keyword">CASE</span> <span class="keyword">WHEN</span> t1.p_id <span class="keyword">IS</span> <span class="keyword">NULL</span> <span class="keyword">THEN</span> &quot;Root&quot;</span><br><span class="line">         <span class="keyword">WHEN</span> t2.p_id <span class="keyword">IS</span> <span class="keyword">NULL</span> <span class="keyword">THEN</span> &quot;Leaf&quot;</span><br><span class="line">    <span class="keyword">ELSE</span> &quot;Inner&quot; <span class="keyword">END</span>) <span class="keyword">AS</span> type</span><br><span class="line"><span class="keyword">FROM</span> tree <span class="keyword">AS</span> t1</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> (</span><br><span class="line">    <span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> p_id</span><br><span class="line">    <span class="keyword">FROM</span> tree</span><br><span class="line">    <span class="keyword">WHERE</span> p_id <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line">) <span class="keyword">AS</span> t2</span><br><span class="line"><span class="keyword">ON</span> t1.id <span class="operator">=</span> t2.p_id</span><br></pre></td></tr></table></figure> 因为受之前的思路影响，这里还是想着用 <code>JOIN</code>
+去做，事实上并不需要，可以进一步简化： <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id, (</span><br><span class="line">    <span class="keyword">CASE</span> <span class="keyword">WHEN</span> p_id <span class="keyword">IS</span> <span class="keyword">NULL</span> <span class="keyword">THEN</span> &quot;Root&quot;</span><br><span class="line">         <span class="keyword">WHEN</span> id <span class="keyword">IN</span> (<span class="keyword">SELECT</span> t.p_id <span class="keyword">FROM</span> tree <span class="keyword">AS</span> t) <span class="keyword">THEN</span> &quot;Inner&quot;</span><br><span class="line">    <span class="keyword">ELSE</span> &quot;Leaf&quot; <span class="keyword">END</span>) <span class="keyword">AS</span> type</span><br><span class="line"><span class="keyword">FROM</span> tree</span><br></pre></td></tr></table></figure></p>
+<p>使用 <code>IF</code>
+函数也是一个很便捷的思路，但这个语法不熟，没有想到： <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    atree.id,</span><br><span class="line">    IF(ISNULL(atree.p_id),</span><br><span class="line">        <span class="string">&#x27;Root&#x27;</span>,</span><br><span class="line">        IF(atree.id <span class="keyword">IN</span> (<span class="keyword">SELECT</span> p_id <span class="keyword">FROM</span> tree), <span class="string">&#x27;Inner&#x27;</span>,<span class="string">&#x27;Leaf&#x27;</span>)) Type</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">    tree atree</span><br></pre></td></tr></table></figure></p>
+<h3 id="keypoint">Keypoint</h3>
+<h4 id="case-语句"><code>CASE</code> 语句</h4>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CASE</span></span><br><span class="line">    <span class="keyword">WHEN</span> condition1 <span class="keyword">THEN</span> result1</span><br><span class="line">    <span class="keyword">WHEN</span> condition2 <span class="keyword">THEN</span> result2</span><br><span class="line">    <span class="keyword">WHEN</span> conditionN <span class="keyword">THEN</span> resultN</span><br><span class="line">    <span class="keyword">ELSE</span> <span class="keyword">result</span></span><br><span class="line"><span class="keyword">END</span>;</span><br></pre></td></tr></table></figure>
+<p><code>CASE</code>
+语句遍历条件并在满足第一个条件时返回一个值。因此，一旦条件为真，它将停止读取并返回结果。如果没有条件为真，则返回
+<code>ELSE</code> 子句中的值，如果没有 <code>ELSE</code> 子句，则返回
+<code>NULL</code>。</p>
 <blockquote>
-<p>安装插件之后，由于缩写相同，不可再使用 <code>hexo d</code> 作为
-<code>hexo deploy</code> 命令的简化<br />
-每次使用 <code>hexo clean</code> 命令都会清除生成的豆瓣页面</p>
+<p>注意到 <code>CASE</code> 语句是有顺序的，如果一行已经符合了前面的
+<code>WHEN</code>，即使后续又满足某个条件也不会再更新。上面的例子中如果将两个
+<code>WHEN</code> 调换顺序，则节点 1 在第一个 <code>WHEN</code>
+就会被认定为内部节点，不会再改变。</p>
 </blockquote>
-<h3 id="使用nvm进行版本管理">使用nvm进行版本管理</h3>
-<p>一切都配置好后，我键入<code>hexo douban</code>命令，但发现出现如下提示：</p>
-<blockquote>
-<p>0 books have been loaded in 934 ms, because you are offline or your
-network is bad</p>
-</blockquote>
-<p>显然，插件并没有爬取到任何内容。好在项目的 GitHub 中已经有人提了这个
-<a
-target="_blank" rel="noopener" href="https://github.com/mythsman/hexo-douban/issues/57">issue</a>，是由于
-Node.js
-版本过高与插件不兼容所致。但由于作者目前没有精力适配新的版本，我只能将
-Node.js 进行降级，可以简单地卸载并重新安装旧版，也可以使用 <a
-target="_blank" rel="noopener" href="https://github.com/coreybutler/nvm-windows/releases">nvm</a>
-这个工具进行版本管理，这样可以方便地在不同版本的 Node.js
-之间进行切换。</p>
-<p>安装好 nvm 后，输入<code>nvm install 12.18.0</code>安装适配版本的
-Node.js，再用<code>nvm use 12.18.0</code>指定使用这个版本。不确定是否成功的话，可用<code>node -v</code>命令查看当前使用的
-Node.js 版本。</p>
-<p>由于重装了 Node.js，我们还要在新的版本上安装 hexo
-组件，为了避免文件丢失我备份了一次博客文件夹。Git bash
-博客根目录，依次安装： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line">npm install</span><br><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>这里要注意，和第一次安装 hexo 不同，重装不要进行 hexo init 操作！</p>
-</blockquote>
-<p>到此已经可以正常使用 hexo 了。</p>
-<h3 id="菜单栏配置">菜单栏配置</h3>
-<p>hexo douban 命令实际上是在 /movies/ 下（或 /books/ 等）生成了对应的
-index.html，我们可以直接在<code>themes/next/_config.yml</code>里配置菜单栏，与
-archives、tags 等页面相同，我这里用的 icon 是 fas fa-book 和 fas
-fa-film。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  books: /books/|| fas fa-book</span><br><span class="line">  movies: /movies/|| fas fa-film</span><br></pre></td></tr></table></figure></p>
-<p>最后在<code>themes/next/language/zh-Hans.yml</code>里设置好对应的中文名：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  books: 书籍</span><br><span class="line">  movies: 电影</span><br></pre></td></tr></table></figure></p>
+<h4 id="if-函数"><code>IF</code> 函数</h4>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IF(expression, &quot;YES&quot;, &quot;NO&quot;);</span><br></pre></td></tr></table></figure>
+<p>如果条件为真，则返回 "YES"，如果条件为假，则返回 "NO"</p>
+<h4 id="ifnull-函数"><code>IFNULL</code> 函数</h4>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IFNULL(expression1, expression2);</span><br></pre></td></tr></table></figure>
+<p>如果expression1不为
+<code>NULL</code>，则返回expression1；否则返回expression_2的结果。</p>
 
       
     </div>
@@ -439,7 +422,7 @@ fa-film。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pr
       
         <div class="post-tags">
           
-            <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+            <a href="/tags/SQL/" rel="tag"># SQL</a>
           
         </div>
       
@@ -452,8 +435,8 @@ fa-film。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pr
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2022/07/30/E2GAN/" rel="next" title="论文复现———基于深度学习的多元时间序列缺失值填补E2GAN">
-                <i class="fa fa-chevron-left"></i> 论文复现———基于深度学习的多元时间序列缺失值填补E2GAN
+              <a href="/2023/02/09/winter-vacation-2023/" rel="next" title="癸卯寒假随笔">
+                <i class="fa fa-chevron-left"></i> 癸卯寒假随笔
               </a>
             
           </div>
@@ -462,8 +445,8 @@ fa-film。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pr
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2022/08/23/my-2019-pre-epidemic-memory/" rel="prev" title="疫情前的记忆——我的2019">
-                疫情前的记忆——我的2019 <i class="fa fa-chevron-right"></i>
+              <a href="/2023/02/21/SQL-2/" rel="prev" title="SQL笔记（二） - LC1484 / LC1667 / 字符串操作">
+                SQL笔记（二） - LC1484 / LC1667 / 字符串操作 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -597,7 +580,7 @@ fa-film。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pr
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE%E6%8F%92%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">安装和配置插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8nvm%E8%BF%9B%E8%A1%8C%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">使用nvm进行版本管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8F%9C%E5%8D%95%E6%A0%8F%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">菜单栏配置</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#question"><span class="nav-number">1.</span> <span class="nav-text">Question</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#solution"><span class="nav-number">2.</span> <span class="nav-text">Solution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#keypoint"><span class="nav-number">3.</span> <span class="nav-text">Keypoint</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#case-%E8%AF%AD%E5%8F%A5"><span class="nav-number">3.1.</span> <span class="nav-text">CASE 语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#if-%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.</span> <span class="nav-text">IF 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ifnull-%E5%87%BD%E6%95%B0"><span class="nav-number">3.3.</span> <span class="nav-text">IFNULL 函数</span></a></li></ol></li></ol></div>
             
 
           </div>

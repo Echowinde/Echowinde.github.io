@@ -289,7 +289,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/02/10/LLTY/">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/02/21/SQL-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -308,7 +308,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2023/02/10/LLTY/" itemprop="url">shmily</a></h1>
+                <a class="post-title-link" href="/2023/02/21/SQL-2/" itemprop="url">SQL笔记（二） - LC1484 / LC1667 / 字符串操作</a></h1>
         
 
         <div class="post-meta">
@@ -320,8 +320,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-10T00:11:11+08:00">
-                2023-02-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-21T10:37:06+08:00">
+                2023-02-21
               </time>
             
 
@@ -359,10 +359,145 @@
 
       
         
-          加密博文
+          <h3 id="question">Question</h3>
+<p>表 <code>Activities</code>： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+-------------+---------+</span><br><span class="line">| 列名         | 类型    |</span><br><span class="line">+-------------+---------+</span><br><span class="line">| sell_date   | date    |</span><br><span class="line">| product     | varchar |</span><br><span class="line">+-------------+---------+</span><br><span class="line">此表没有主键，它可能包含重复项。</span><br><span class="line">此表的每一行都包含产品名称和在市场上销售的日期。</span><br></pre></td></tr></table></figure></p>
+<p>编写一个 SQL 查询来查找每个日期、销售的不同产品的数量及其名称。<br />
+每个日期的销售产品名称应按词典序排列。<br />
+返回按 <code>sell_date</code> 排序的结果表。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2023/02/10/LLTY/#more" rel="contents">
+            <a class="btn" href="/2023/02/21/SQL-2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/02/20/SQL-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Echowind's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/02/20/SQL-1/" itemprop="url">SQL笔记（一） - LC608 / CASE / IF</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-20T20:29:50+08:00">
+                2023-02-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="question">Question</h3>
+<p>给定一个表 <code>tree</code>，<strong>id</strong>
+是树节点的编号，<strong>p_id</strong> 是它父节点的 id 。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+----+------+</span><br><span class="line">| id | p_id |</span><br><span class="line">+----+------+</span><br><span class="line">| 1  | null |</span><br><span class="line">| 2  | 1    |</span><br><span class="line">| 3  | 1    |</span><br><span class="line">| 4  | 2    |</span><br><span class="line">| 5  | 2    |</span><br><span class="line">+----+------+</span><br></pre></td></tr></table></figure>
+树中每个节点属于以下三种类型之一： -
+叶子：如果这个节点没有任何孩子节点。 -
+根：如果这个节点是整棵树的根，即没有父节点。 -
+内部节点：如果这个节点既不是叶子节点也不是根节点。</p>
+<p>写一个查询语句，输出所有节点的编号和节点的类型，并将结果按照节点编号排序。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2023/02/20/SQL-1/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -487,131 +622,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2023/02/09/winter-vacation-2023/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/01/01/weekly-films-record/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Echowind's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2023/01/01/weekly-films-record/" itemprop="url">每周电影记录</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-01-01T19:55:03+08:00">
-                2023-01-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>从疫情那年居家开始，花在看电影上的时间多了起来，拖 N
-站的福，现在找资源也方便了很多。不定期更新，看心情写些想法。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2023/01/01/weekly-films-record/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1609,7 +1619,7 @@ target="_blank" rel="noopener" href="https://github.com/Luoyonghong/E2EGAN">GitH
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
