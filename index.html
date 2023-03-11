@@ -289,6 +289,130 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/03/11/algorithm-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Echowind's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/03/11/algorithm-1/" itemprop="url">算法刷题（一） - 二叉树遍历</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-11T21:12:53+08:00">
+                2023-03-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>以前刷过的题基本全忘光了，准备投暑期实习开始临时抱佛脚，赶紧复习起来。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2023/03/11/algorithm-1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/02/22/SQL-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1424,140 +1548,6 @@ hhh。从他的博文里，能看出他不仅是一个很有技术力的大佬�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/07/30/E2GAN/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Echowind's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/07/30/E2GAN/" itemprop="url">论文复现———基于深度学习的多元时间序列缺失值填补E2GAN</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-07-30T00:21:38+08:00">
-                2022-07-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>最近在尝试做时间序列数据的缺失值填补，由于数据的缺失率很高（80%
-以上）且这一部分预计是研究的重点和亮点，想到了用深度学习方法来做填补。在网上搜索资料发现，现有的模型很多都使用了
-GAN 框架，比如 GAIN (<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1806.02920">ICML
-2018</a>)，E2GAN (<a
-target="_blank" rel="noopener" href="https://dl.acm.org/doi/pdf/10.5555/3326943.3327090">NIPS 2018</a>,
-<a target="_blank" rel="noopener" href="https://www.ijcai.org/Proceedings/2019/0429.pdf">IJCAI
-2019</a>)，这些都是发表在计算机顶会上的成果。后者参考资料比较多，我打算用这个框架进行尝试，这也是我第一次正儿八经地做模型复现。幸运的是，我找到了论文一作的<a
-target="_blank" rel="noopener" href="https://github.com/Luoyonghong/E2EGAN">GitHub
-项目</a>，不至于从零开始。但这个项目基于 Python 2.7 和 Tensorflow
-1.7，有些陈旧了。我参考源码和论文，按个人理解用 Python 3和Pytorch
-复现了这一模型结构。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/07/30/E2GAN/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1608,7 +1598,7 @@ target="_blank" rel="noopener" href="https://github.com/Luoyonghong/E2EGAN">GitH
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1621,7 +1611,7 @@ target="_blank" rel="noopener" href="https://github.com/Luoyonghong/E2EGAN">GitH
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="杂谈," />
+  <meta name="keywords" content="python,算法," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="壹 两周前，我上传了最后一门课的大作业，然后爽玩了两个星期游戏，后知后觉地意识到我的研一结束了。这一年里，我的心态发生过好几次变化，从一开始入学的积极兴奋，到适应课程和科研节奏后的闲适，再到被各种项目打扰的烦躁，干劲一点点地流逝，竺老第一问的答案也慢慢变成了混。暑假开始了，校园里的人越来越少，无所适从的感觉越来越强。我无数次幻想过结了课之后的生活，但当这一天真的到来的时候，发现也没有想象中的美好">
+<meta name="description" content="以前刷过的题基本全忘光了，准备投暑期实习开始临时抱佛脚，赶紧复习起来。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学期结束碎碎念">
-<meta property="og:url" content="https://echowinde.github.io/2022/07/06/first-year-summary/index.html">
+<meta property="og:title" content="算法刷题（一） - 二叉树遍历">
+<meta property="og:url" content="https://echowinde.github.io/2023/03/11/algorithm-1/index.html">
 <meta property="og:site_name" content="Echowind&#39;s Blog">
-<meta property="og:description" content="壹 两周前，我上传了最后一门课的大作业，然后爽玩了两个星期游戏，后知后觉地意识到我的研一结束了。这一年里，我的心态发生过好几次变化，从一开始入学的积极兴奋，到适应课程和科研节奏后的闲适，再到被各种项目打扰的烦躁，干劲一点点地流逝，竺老第一问的答案也慢慢变成了混。暑假开始了，校园里的人越来越少，无所适从的感觉越来越强。我无数次幻想过结了课之后的生活，但当这一天真的到来的时候，发现也没有想象中的美好">
+<meta property="og:description" content="以前刷过的题基本全忘光了，准备投暑期实习开始临时抱佛脚，赶紧复习起来。">
 <meta property="og:locale">
-<meta property="article:published_time" content="2022-07-06T12:40:21.000Z">
-<meta property="article:modified_time" content="2022-08-23T07:53:24.814Z">
+<meta property="article:published_time" content="2023-03-11T13:12:53.000Z">
+<meta property="article:modified_time" content="2023-03-11T13:30:34.729Z">
 <meta property="article:author" content="Echowind">
-<meta property="article:tag" content="杂谈">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary">
 
 
@@ -120,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="https://echowinde.github.io/2022/07/06/first-year-summary/"/>
+  <link rel="canonical" href="https://echowinde.github.io/2023/03/11/algorithm-1/"/>
 
 
 
 
 
-  <title>学期结束碎碎念 | Echowind's Blog</title>
+  <title>算法刷题（一） - 二叉树遍历 | Echowind's Blog</title>
   
 
 
@@ -293,7 +294,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/07/06/first-year-summary/">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/03/11/algorithm-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -310,7 +311,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">学期结束碎碎念</h1>
+          <h1 class="post-title" itemprop="name headline">算法刷题（一） - 二叉树遍历</h1>
         
 
         <div class="post-meta">
@@ -322,8 +323,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-07-06T20:40:21+08:00">
-                2022-07-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-11T21:12:53+08:00">
+                2023-03-11
               </time>
             
 
@@ -365,21 +366,27 @@
       
 
       
-        <h3 id="壹">壹</h3>
-<p>两周前，我上传了最后一门课的大作业，然后爽玩了两个星期游戏，后知后觉地意识到我的研一结束了。这一年里，我的心态发生过好几次变化，从一开始入学的积极兴奋，到适应课程和科研节奏后的闲适，再到被各种项目打扰的烦躁，干劲一点点地流逝，竺老第一问的答案也慢慢变成了混。暑假开始了，校园里的人越来越少，无所适从的感觉越来越强。我无数次幻想过结了课之后的生活，但当这一天真的到来的时候，发现也没有想象中的美好。</p>
+        <p>以前刷过的题基本全忘光了，准备投暑期实习开始临时抱佛脚，赶紧复习起来。</p>
 <span id="more"></span>
-<p>这一年有什么成果呢，两篇抱着师兄大腿的挂名文章，两个交给代理后不知所踪的专利，还有自己投了一个多月还没有回音的小论文，好像有意义，好像又没有意义。我喜不喜欢读研呢，我还是不知道，只是坚定了两件事——我绝对不喜欢计划之外的，突如其来的任务；全心投入一件事，而不是同时做好几件事。</p>
-<h3 id="贰">贰</h3>
-<p>涛哥走了，导师把他派去了深圳，在一个大牛的手下做一年的科研助理。我还记得那天，我们几个人窝在涛哥的电脑前，拉上窗帘关着灯看恐怖片，毫无预兆地，导师打来了电话，让他考虑考虑。实话说，这份差事令人艳羡，研究方向是当下的热门，涛哥也终于有机会能从高炉炼铁的大坑里跳了出来。这件事又一次让我感叹人生无常，你永远不知道命运的节点什么时候到来。做好自己，谋事在人，成事在天。</p>
-<p>我们剩下的三个人还是像往常一样，一起吃饭，打打游戏，健健身，但总感觉少了些什么。未来很长的一段时间，推开宿舍门，都看不到涛哥在位置上打
-BOSS，也没有办法四个人一起讨论 98
-上的热帖，吐槽实验室的见闻了吧。好些朋友羡慕过我的宿舍，我不知道去年 7
-月的那天，面对新生群里的好些征人信息，是什么让我选择联系了煜谦，但我始终庆幸这一决定。希望我们都有光明的未来。</p>
-<h3 id="叁">叁</h3>
-<p>在延安路的天桥上，突然怀念起本科的时候那些没课又不用赶作业的周末：前一天晚上，打开备忘录看看想去的地方，在被窝里规划好路线，第二天从学校北门出去，走几百米，再花上
-40
-分钟到一个小时乘地铁去老城南、新街口，去玄武湖、紫金山。往往我不会直接到达目的地，而是在附近就下了车，凭着感觉循着那些陌生的大街小巷，找到我的目标，一番游玩后再漫无目的地四处转转。到了饭点，到点评的收藏夹里，挑一家种草已久的餐厅赴宴。即使早出晚归，回程的脚步也从不疲惫，不忘在备忘录里打上一个勾，最后心满意足地入梦。</p>
-<p>到了杭州之后我仿佛失了这种兴致。两个学期我都曾有过大把的时间，每月的月钱也让钱包更加宽裕，我再也不用坐一个小时的地铁，只要愿意可以打车来回，只是没有值得探索的地方。或许是景不对，京杭运河上有隆隆作响的采砂船，西溪湿地外是热火朝天的地铁工地。是的，西湖很美，但总是像镜花水月，只有到了湖边，才会惊觉这里还有这样的美景，原来这还是江南烟雨的杭州，那个快节奏高消费的网红城市的另一面。或许，也是人不对，被磨去了热情，良辰美景又与谁说？</p>
+<h3 id="二叉树前中后序遍历">二叉树前/中/后序遍历</h3>
+<blockquote>
+<p>口诀<br />
+前序遍历：根——左——右<br />
+中序遍历：左——根——右<br />
+后序遍历：左——右——根<br />
+前中后就是根节点的顺序</p>
+</blockquote>
+<p>这三种类型的遍历思路都是深度优先搜索（DFS），用递归法比较简单。代码以中序搜索为例，都是定义一个递归嵌套函数，不同顺序只要调换函数中语句执行位置就好了。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inorderTraversal</span>(<span class="params">self, root: TreeNode</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        ans = []</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">recursion</span>(<span class="params">node</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> node:</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            recursion(node.left)</span><br><span class="line">            ans.append(node.val)</span><br><span class="line">            recursion(node.right)</span><br><span class="line">        recursion(root)</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure></p>
+<h3 id="二叉树层序遍历">二叉树层序遍历</h3>
+<p>层序遍历的思路是广度优先搜索（BFS），需要维护一个队列，把遍历到的节点
+pop 出来，待遍历的节点（当前节点的左右节点）添加到队列末尾。</p>
+<p>Leetcode 102 这题比较麻烦的地方在于要求输出嵌套 list
+显示二叉树的层级，思路是记录每一层节点的数量，用循环将这一层的节点一次性全部
+pop 出来后再开始遍历下一层。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">levelOrder</span>(<span class="params">self, root: TreeNode</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        queue = [root]</span><br><span class="line">        ans = []</span><br><span class="line">        temp = []</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line">        <span class="keyword">while</span> <span class="built_in">len</span>(queue) &gt; <span class="number">0</span>:</span><br><span class="line">            num = <span class="built_in">len</span>(queue)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num):</span><br><span class="line">                cur = queue.pop(<span class="number">0</span>)</span><br><span class="line">                <span class="keyword">if</span> cur.left:</span><br><span class="line">                    queue.append(cur.left)</span><br><span class="line">                <span class="keyword">if</span> cur.right:</span><br><span class="line">                    queue.append(cur.right)</span><br><span class="line">                temp.append(cur.val)</span><br><span class="line">            ans.append(temp)</span><br><span class="line">            temp = []</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+之前写过一个更复杂的版本，队列记录每个节点和对应层级的
+tuple，再用一个变量记录每一个 list 的最后一个节点层级。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">levelOrder</span>(<span class="params">self, root: TreeNode</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        queue = [(root, <span class="number">1</span>)]</span><br><span class="line">        ans = []</span><br><span class="line">        temp = []</span><br><span class="line">        cur_level = <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line">        <span class="keyword">while</span> <span class="built_in">len</span>(queue) &gt; <span class="number">0</span>:</span><br><span class="line">            cur, level = queue.pop(<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">if</span> cur.left:</span><br><span class="line">                queue.append((cur.left, level+<span class="number">1</span>))</span><br><span class="line">            <span class="keyword">if</span> cur.right:</span><br><span class="line">                queue.append((cur.right, level+<span class="number">1</span>))</span><br><span class="line">            <span class="keyword">if</span> cur_level &lt; level:</span><br><span class="line">                ans.append(temp)</span><br><span class="line">                temp = []</span><br><span class="line">                cur_level += <span class="number">1</span></span><br><span class="line">            temp.append(cur.val)</span><br><span class="line">        ans.append(temp)</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -397,7 +404,9 @@ BOSS，也没有办法四个人一起讨论 98
       
         <div class="post-tags">
           
-            <a href="/tags/%E6%9D%82%E8%B0%88/" rel="tag"># 杂谈</a>
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
           
         </div>
       
@@ -410,8 +419,8 @@ BOSS，也没有办法四个人一起讨论 98
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2022/06/12/hexo-diary-2/" rel="next" title="Hexo建站日记（二）——在文章中显示数学公式">
-                <i class="fa fa-chevron-left"></i> Hexo建站日记（二）——在文章中显示数学公式
+              <a href="/2023/02/22/SQL-3/" rel="next" title="SQL笔记（三） - LC1795 / 透视表">
+                <i class="fa fa-chevron-left"></i> SQL笔记（三） - LC1795 / 透视表
               </a>
             
           </div>
@@ -419,10 +428,6 @@ BOSS，也没有办法四个人一起讨论 98
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2022/07/30/E2GAN/" rel="prev" title="论文复现———基于深度学习的多元时间序列缺失值填补E2GAN">
-                论文复现———基于深度学习的多元时间序列缺失值填补E2GAN <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -555,7 +560,7 @@ BOSS，也没有办法四个人一起讨论 98
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A3%B9"><span class="nav-number">1.</span> <span class="nav-text">壹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%B0"><span class="nav-number">2.</span> <span class="nav-text">贰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%81"><span class="nav-number">3.</span> <span class="nav-text">叁</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E5%89%8D%E4%B8%AD%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">1.</span> <span class="nav-text">二叉树前&#x2F;中&#x2F;后序遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">2.</span> <span class="nav-text">二叉树层序遍历</span></a></li></ol></div>
             
 
           </div>
