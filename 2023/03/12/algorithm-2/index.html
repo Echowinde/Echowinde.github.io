@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python,算法,链表," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="反转链表 双指针，其中cur指向当前遍历节点，另一个prev指向当前节点的前一个节点，另外需要一个临时变量temp记录后一个节点，三个节点的指向交换即可。注意循环中的赋值顺序不能调换，先用临时变量记录后节点，再调转当前节点的指向，然后依次将prev、cur向后移动。 12345678910class Solution:    def reverseList(self, head: Option">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法刷题（二） - 链表操作">
+<meta property="og:url" content="https://echowinde.github.io/2023/03/12/algorithm-2/index.html">
+<meta property="og:site_name" content="Echowind&#39;s Blog">
+<meta property="og:description" content="反转链表 双指针，其中cur指向当前遍历节点，另一个prev指向当前节点的前一个节点，另外需要一个临时变量temp记录后一个节点，三个节点的指向交换即可。注意循环中的赋值顺序不能调换，先用临时变量记录后节点，再调转当前节点的指向，然后依次将prev、cur向后移动。 12345678910class Solution:    def reverseList(self, head: Option">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-03-12T15:19:56.000Z">
+<meta property="article:modified_time" content="2023-03-21T03:04:22.508Z">
+<meta property="article:author" content="Echowind">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="链表">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://echowinde.github.io/2023/03/12/algorithm-2/"/>
+
+
+
+
+
+  <title>算法刷题（二） - 链表操作 | Echowind's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1c69545fd1bf6524a6ffc11f8e89011f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Echowind's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">世界上只有一种英雄主义，就是在认清生活的真相后依然热爱生活</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            时间线
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fas fa-book"></i> <br />
+            
+            书籍
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-movies">
+          <a href="/movies/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fas fa-film"></i> <br />
+            
+            电影
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-logs">
+          <a href="/logs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-fas fa-file-text"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/03/12/algorithm-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Echowind's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">算法刷题（二） - 链表操作</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-12T23:19:56+08:00">
+                2023-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读次数：
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="反转链表">反转链表</h3>
+<p>双指针，其中<code>cur</code>指向当前遍历节点，另一个<code>prev</code>指向当前节点的前一个节点，另外需要一个临时变量<code>temp</code>记录后一个节点，三个节点的指向交换即可。注意循环中的赋值顺序不能调换，先用临时变量记录后节点，再调转当前节点的指向，然后依次将<code>prev</code>、<code>cur</code>向后移动。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reverseList</span>(<span class="params">self, head: <span class="type">Optional</span>[ListNode]</span>) -&gt; <span class="type">Optional</span>[ListNode]:</span><br><span class="line">        prev = <span class="literal">None</span></span><br><span class="line">        cur = head</span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            temp = cur.<span class="built_in">next</span>           </span><br><span class="line">            cur.<span class="built_in">next</span> = prev</span><br><span class="line">            prev = cur</span><br><span class="line">            cur = temp</span><br><span class="line">        <span class="keyword">return</span> prev</span><br></pre></td></tr></table></figure></p>
+<h3 id="删除链表的节点">删除链表的节点</h3>
+<p>与反转链表相似的思路解决，更简单。注意特殊情况，删除头节点时直接返回<code>head.next</code>，以及删除节点后可直接退出循环。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deleteNode</span>(<span class="params">self, head: ListNode, val: <span class="built_in">int</span></span>) -&gt; ListNode:</span><br><span class="line">        <span class="keyword">if</span> head.val == val:</span><br><span class="line">            <span class="keyword">return</span> head.<span class="built_in">next</span></span><br><span class="line">        prev, cur = <span class="literal">None</span>, head</span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            <span class="keyword">if</span> cur.val == val:</span><br><span class="line">                prev.<span class="built_in">next</span> = cur.<span class="built_in">next</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            prev = cur</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> head</span><br></pre></td></tr></table></figure></p>
+<p>拓展到链表中倒数第 k
+个节点，仍然使用双指针。对链表遍历的终止条件是<code>cur</code>指向<code>None</code>，此时<code>prev</code>需在倒数第
+k 个节点，则两个指针间相距 k
+个节点。因此，先将<code>cur</code>单独向后移动 k
+次，然后同时将两个指针向后遍历即可。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getKthFromEnd</span>(<span class="params">self, head: ListNode, k: <span class="built_in">int</span></span>) -&gt; ListNode:</span><br><span class="line">        prev, cur = head, head</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(k):</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">            prev = prev.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> prev</span><br></pre></td></tr></table></figure></p>
+<h3 id="复制复杂链表">复制复杂链表</h3>
+<p>这一题的难点在于，构造新链表的每个节点时，无法处理<code>random</code>的指向，因为指向的节点可能还未创建，没什么思路。<a
+target="_blank" rel="noopener" href="https://leetcode.cn/problems/fu-za-lian-biao-de-fu-zhi-lcof/solutions/476617/jian-zhi-offer-35-fu-za-lian-biao-de-fu-zhi-ha-xi-/">题解</a>给出的一个直观的方法是使用哈希表，先遍历一遍链表，将旧节点与创建的新节点一一对应起来，在第二次遍历中给新节点的指向赋值。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">copyRandomList</span>(<span class="params">self, head: <span class="string">&#x27;Node&#x27;</span></span>) -&gt; <span class="string">&#x27;Node&#x27;</span>:</span><br><span class="line">        dic = <span class="built_in">dict</span>()</span><br><span class="line">        cur = head</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> head:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            node = Node(cur.val)</span><br><span class="line">            dic[cur] = node</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        cur = head</span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            dic[cur].<span class="built_in">next</span> = dic.get(cur.<span class="built_in">next</span>)</span><br><span class="line">            dic[cur].random = dic.get(cur.random)</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> dic[head]</span><br></pre></td></tr></table></figure></p>
+<h3 id="合并两个有序链表">合并两个有序链表</h3>
+<p>用递归比较简单，思路也清晰，但是做的时候每次都想不到。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">mergeTwoLists</span>(<span class="params">self, l1: ListNode, l2: ListNode</span>) -&gt; ListNode:</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> l1:</span><br><span class="line">            <span class="keyword">return</span> l2</span><br><span class="line">        <span class="keyword">elif</span> <span class="keyword">not</span> l2:</span><br><span class="line">            <span class="keyword">return</span> l1</span><br><span class="line">        <span class="keyword">if</span> l1.val &lt; l2.val:</span><br><span class="line">            l1.<span class="built_in">next</span> = self.mergeTwoLists(l1.<span class="built_in">next</span>, l2)</span><br><span class="line">            <span class="keyword">return</span> l1</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            l2.<span class="built_in">next</span> = self.mergeTwoLists(l1, l2.<span class="built_in">next</span>)</span><br><span class="line">            <span class="keyword">return</span> l2</span><br></pre></td></tr></table></figure></p>
+<p>自己写的迭代版本，用了额外空间，对比双指针指向的 l1 和 l2
+的当前节点，当其中一个链表遍历结束后，将另一个链表的后续节点全部接入<code>cur</code>中。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">mergeTwoLists</span>(<span class="params">self, l1: ListNode, l2: ListNode</span>) -&gt; ListNode:</span><br><span class="line">        head = ListNode()</span><br><span class="line">        cur = head</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> l1:</span><br><span class="line">            <span class="keyword">return</span> l2</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> l2:</span><br><span class="line">            <span class="keyword">return</span> l1</span><br><span class="line">        <span class="keyword">while</span> l1 <span class="keyword">and</span> l2:</span><br><span class="line">            <span class="keyword">if</span> l1.val &lt; l2.val:</span><br><span class="line">                cur.val = l1.val</span><br><span class="line">                l1 = l1.<span class="built_in">next</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cur.val = l2.val</span><br><span class="line">                l2 = l2.<span class="built_in">next</span></span><br><span class="line">            cur.<span class="built_in">next</span> = ListNode()</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> l1:</span><br><span class="line">            cur.val = l2.val</span><br><span class="line">            cur.<span class="built_in">next</span> = l2.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> l2:</span><br><span class="line">            cur.val = l1.val</span><br><span class="line">            cur.<span class="built_in">next</span> = l1.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> head</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          
+            <a href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag"># 链表</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/03/11/algorithm-1/" rel="next" title="算法刷题（一） - 二叉树遍历">
+                <i class="fa fa-chevron-left"></i> 算法刷题（一） - 二叉树遍历
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2023/03/21/algorithm-3/" rel="prev" title="算法刷题（三） - 二叉树的结构">
+                算法刷题（三） - 二叉树的结构 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Echowinde" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8"><span class="nav-number">1.</span> <span class="nav-text">反转链表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E8%8A%82%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">删除链表的节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8"><span class="nav-number">3.</span> <span class="nav-text">复制复杂链表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%93%BE%E8%A1%A8"><span class="nav-number">4.</span> <span class="nav-text">合并两个有序链表</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2022 &mdash; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Echowind</span>
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span id="busuanzi_container_site_uv" style='display:none'>
+      <i class="fa fa-user"></i>
+      <span id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span id="busuanzi_container_site_pv" style='display:none'>
+      <i class="fa fa-eye"></i>
+      <span id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

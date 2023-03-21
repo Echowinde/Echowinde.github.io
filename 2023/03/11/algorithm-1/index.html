@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="python,算法," />
+  <meta name="keywords" content="python,算法,二叉树," />
 
 
 
@@ -87,10 +87,11 @@
 <meta property="og:description" content="以前刷过的题基本全忘光了，准备投暑期实习开始临时抱佛脚，赶紧复习起来。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-03-11T13:12:53.000Z">
-<meta property="article:modified_time" content="2023-03-11T13:30:34.729Z">
+<meta property="article:modified_time" content="2023-03-21T02:22:08.432Z">
 <meta property="article:author" content="Echowind">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="算法">
+<meta property="article:tag" content="二叉树">
 <meta name="twitter:card" content="summary">
 
 
@@ -383,10 +384,17 @@
 pop 出来，待遍历的节点（当前节点的左右节点）添加到队列末尾。</p>
 <p>Leetcode 102 这题比较麻烦的地方在于要求输出嵌套 list
 显示二叉树的层级，思路是记录每一层节点的数量，用循环将这一层的节点一次性全部
-pop 出来后再开始遍历下一层。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">levelOrder</span>(<span class="params">self, root: TreeNode</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        queue = [root]</span><br><span class="line">        ans = []</span><br><span class="line">        temp = []</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line">        <span class="keyword">while</span> <span class="built_in">len</span>(queue) &gt; <span class="number">0</span>:</span><br><span class="line">            num = <span class="built_in">len</span>(queue)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num):</span><br><span class="line">                cur = queue.pop(<span class="number">0</span>)</span><br><span class="line">                <span class="keyword">if</span> cur.left:</span><br><span class="line">                    queue.append(cur.left)</span><br><span class="line">                <span class="keyword">if</span> cur.right:</span><br><span class="line">                    queue.append(cur.right)</span><br><span class="line">                temp.append(cur.val)</span><br><span class="line">            ans.append(temp)</span><br><span class="line">            temp = []</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
-之前写过一个更复杂的版本，队列记录每个节点和对应层级的
+pop 出来后再开始遍历下一层。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">levelOrder</span>(<span class="params">self, root: TreeNode</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        queue = [root]</span><br><span class="line">        ans = []</span><br><span class="line">        temp = []</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line">        <span class="keyword">while</span> <span class="built_in">len</span>(queue) &gt; <span class="number">0</span>:</span><br><span class="line">            num = <span class="built_in">len</span>(queue)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num):</span><br><span class="line">                cur = queue.pop(<span class="number">0</span>)</span><br><span class="line">                <span class="keyword">if</span> cur.left:</span><br><span class="line">                    queue.append(cur.left)</span><br><span class="line">                <span class="keyword">if</span> cur.right:</span><br><span class="line">                    queue.append(cur.right)</span><br><span class="line">                temp.append(cur.val)</span><br><span class="line">            ans.append(temp)</span><br><span class="line">            temp = []</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure></p>
+<p>之前写过一个更复杂的版本，队列记录每个节点和对应层级的
 tuple，再用一个变量记录每一个 list 的最后一个节点层级。
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">levelOrder</span>(<span class="params">self, root: TreeNode</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        queue = [(root, <span class="number">1</span>)]</span><br><span class="line">        ans = []</span><br><span class="line">        temp = []</span><br><span class="line">        cur_level = <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line">        <span class="keyword">while</span> <span class="built_in">len</span>(queue) &gt; <span class="number">0</span>:</span><br><span class="line">            cur, level = queue.pop(<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">if</span> cur.left:</span><br><span class="line">                queue.append((cur.left, level+<span class="number">1</span>))</span><br><span class="line">            <span class="keyword">if</span> cur.right:</span><br><span class="line">                queue.append((cur.right, level+<span class="number">1</span>))</span><br><span class="line">            <span class="keyword">if</span> cur_level &lt; level:</span><br><span class="line">                ans.append(temp)</span><br><span class="line">                temp = []</span><br><span class="line">                cur_level += <span class="number">1</span></span><br><span class="line">            temp.append(cur.val)</span><br><span class="line">        ans.append(temp)</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure></p>
+<h3 id="二叉树层序遍历-ii">二叉树层序遍历-II</h3>
+<p>在层序遍历的基础上，要求将奇数层的值正向输出，偶数层反向输出，很容易想到对记录偶数层的数据进行翻转。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">levelOrder</span>(<span class="params">self, root: TreeNode</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        queue = [root]</span><br><span class="line">        ans = []</span><br><span class="line">        temp = []</span><br><span class="line">        level = <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line">        <span class="keyword">while</span> queue:</span><br><span class="line">            length = <span class="built_in">len</span>(queue)</span><br><span class="line">            odd = <span class="literal">True</span> <span class="keyword">if</span> level % <span class="number">2</span> == <span class="number">1</span> <span class="keyword">else</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(length):</span><br><span class="line">                node = queue.pop(<span class="number">0</span>)</span><br><span class="line">                temp.append(node.val)</span><br><span class="line">                <span class="keyword">if</span> node.left:</span><br><span class="line">                    queue.append(node.left)</span><br><span class="line">                <span class="keyword">if</span> node.right:</span><br><span class="line">                    queue.append(node.right)</span><br><span class="line">            <span class="keyword">if</span> odd:</span><br><span class="line">                temp = temp[::-<span class="number">1</span>]</span><br><span class="line">            level += <span class="number">1</span></span><br><span class="line">            ans.append(temp)</span><br><span class="line">            temp = []</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure> &gt;
+可以不使用<code>level</code>对层数进行记录，<code>len(ans)</code>效果相同，但没想到</p>
+<blockquote>
+<p>另一种方法是<code>temp</code>使用双端队列，python中为collections.deque，将奇数层的<code>val</code>添加至队尾，偶数层则用<code>appendleft</code>方法添加至队首</p>
+</blockquote>
 
       
     </div>
@@ -408,6 +416,8 @@ tuple，再用一个变量记录每一个 list 的最后一个节点层级。
           
             <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
           
+            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag"># 二叉树</a>
+          
         </div>
       
 
@@ -428,6 +438,10 @@ tuple，再用一个变量记录每一个 list 的最后一个节点层级。
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2023/03/12/algorithm-2/" rel="prev" title="算法刷题（二） - 链表操作">
+                算法刷题（二） - 链表操作 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -504,7 +518,7 @@ tuple，再用一个变量记录每一个 list 的最后一个节点层级。
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -517,7 +531,7 @@ tuple，再用一个变量记录每一个 list 的最后一个节点层级。
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -560,7 +574,7 @@ tuple，再用一个变量记录每一个 list 的最后一个节点层级。
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E5%89%8D%E4%B8%AD%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">1.</span> <span class="nav-text">二叉树前&#x2F;中&#x2F;后序遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">2.</span> <span class="nav-text">二叉树层序遍历</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E5%89%8D%E4%B8%AD%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">1.</span> <span class="nav-text">二叉树前&#x2F;中&#x2F;后序遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">2.</span> <span class="nav-text">二叉树层序遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86-ii"><span class="nav-number">3.</span> <span class="nav-text">二叉树层序遍历-II</span></a></li></ol></div>
             
 
           </div>

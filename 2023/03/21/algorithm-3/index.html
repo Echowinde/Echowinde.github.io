@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="SQL," />
+  <meta name="keywords" content="python,算法,二叉树," />
 
 
 
@@ -79,17 +79,19 @@
 
 
 
-<meta name="description" content="Question 表 Activities： 12345678+-------------+---------+| 列名         | 类型    |+-------------+---------+| sell_date   | date    || product     | varchar |+-------------+---------+此表没有主键，它可能包含重复项。此表的每一">
+<meta name="description" content="树的子结构 一开始的思路是对 A、B 分别进行二叉树遍历，判断A.val数组是否包含B.val的数组，也过了绝大部分测试用例，但最后发现仍然有些特殊情况不符合这个条件，遂放弃。题解的这个递归的方法并不是很好想，若 B 是 A 的子结构，B 的根节点可以是 A 的任何一个节点，因此任务拆解为，先遍历 A 中的每个节点（isSubStructure），再判断树 A 中 以该节点为根节点的子">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SQL笔记（二） - LC1484 &#x2F; LC1667 &#x2F; 字符串操作">
-<meta property="og:url" content="https://echowinde.github.io/2023/02/21/SQL-2/index.html">
+<meta property="og:title" content="算法刷题（三） - 二叉树的结构">
+<meta property="og:url" content="https://echowinde.github.io/2023/03/21/algorithm-3/index.html">
 <meta property="og:site_name" content="Echowind&#39;s Blog">
-<meta property="og:description" content="Question 表 Activities： 12345678+-------------+---------+| 列名         | 类型    |+-------------+---------+| sell_date   | date    || product     | varchar |+-------------+---------+此表没有主键，它可能包含重复项。此表的每一">
+<meta property="og:description" content="树的子结构 一开始的思路是对 A、B 分别进行二叉树遍历，判断A.val数组是否包含B.val的数组，也过了绝大部分测试用例，但最后发现仍然有些特殊情况不符合这个条件，遂放弃。题解的这个递归的方法并不是很好想，若 B 是 A 的子结构，B 的根节点可以是 A 的任何一个节点，因此任务拆解为，先遍历 A 中的每个节点（isSubStructure），再判断树 A 中 以该节点为根节点的子">
 <meta property="og:locale">
-<meta property="article:published_time" content="2023-02-21T02:37:06.000Z">
-<meta property="article:modified_time" content="2023-02-21T11:23:10.668Z">
+<meta property="article:published_time" content="2023-03-21T02:51:56.000Z">
+<meta property="article:modified_time" content="2023-03-21T03:19:56.601Z">
 <meta property="article:author" content="Echowind">
-<meta property="article:tag" content="SQL">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="二叉树">
 <meta name="twitter:card" content="summary">
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://echowinde.github.io/2023/02/21/SQL-2/"/>
+  <link rel="canonical" href="https://echowinde.github.io/2023/03/21/algorithm-3/"/>
 
 
 
 
 
-  <title>SQL笔记（二） - LC1484 / LC1667 / 字符串操作 | Echowind's Blog</title>
+  <title>算法刷题（三） - 二叉树的结构 | Echowind's Blog</title>
   
 
 
@@ -293,7 +295,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/02/21/SQL-2/">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/03/21/algorithm-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -310,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">SQL笔记（二） - LC1484 / LC1667 / 字符串操作</h1>
+          <h1 class="post-title" itemprop="name headline">算法刷题（三） - 二叉树的结构</h1>
         
 
         <div class="post-meta">
@@ -322,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-21T10:37:06+08:00">
-                2023-02-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-21T10:51:56+08:00">
+                2023-03-21
               </time>
             
 
@@ -365,61 +367,27 @@
       
 
       
-        <h3 id="question">Question</h3>
-<p>表 <code>Activities</code>： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+-------------+---------+</span><br><span class="line">| 列名         | 类型    |</span><br><span class="line">+-------------+---------+</span><br><span class="line">| sell_date   | date    |</span><br><span class="line">| product     | varchar |</span><br><span class="line">+-------------+---------+</span><br><span class="line">此表没有主键，它可能包含重复项。</span><br><span class="line">此表的每一行都包含产品名称和在市场上销售的日期。</span><br></pre></td></tr></table></figure></p>
-<p>编写一个 SQL 查询来查找每个日期、销售的不同产品的数量及其名称。<br />
-每个日期的销售产品名称应按词典序排列。<br />
-返回按 <code>sell_date</code> 排序的结果表。</p>
-<span id="more"></span>
-<h3 id="solution">Solution</h3>
-<p>显然需要作一个对日期的 <code>GROUP BY</code>，数量的统计可以直接用
-<code>COUNT</code>
-函数完成，但我意识到对商品名称的拼接需要的聚合函数我完全不掌握，遂查看题解：
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> sell_date, <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> product) <span class="keyword">AS</span> num_sold, GROUP_CONCAT(</span><br><span class="line">        <span class="keyword">DISTINCT</span> product</span><br><span class="line">        <span class="keyword">ORDER</span> <span class="keyword">BY</span> product</span><br><span class="line">        SEPARATOR <span class="string">&#x27;,&#x27;</span></span><br><span class="line">    ) <span class="keyword">AS</span> products </span><br><span class="line"><span class="keyword">FROM</span> Activities</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> sell_date </span><br></pre></td></tr></table></figure></p>
-<h3 id="question-2">Question 2</h3>
-<p>表： <code>Users</code> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+----------------+---------+</span><br><span class="line">| Column Name    | Type    |</span><br><span class="line">+----------------+---------+</span><br><span class="line">| user_id        | int     |</span><br><span class="line">| name           | varchar |</span><br><span class="line">+----------------+---------+</span><br><span class="line">user_id 是该表的主键。</span><br><span class="line">该表包含用户的 ID 和名字。名字仅由小写和大写字符组成。</span><br></pre></td></tr></table></figure> 编写一个 SQL
-查询来修复名字，使得只有第一个字符是大写的，其余都是小写的。<br />
-返回按 user_id 排序的结果表。</p>
-<h3 id="solution-2">Solution 2</h3>
-<p>和上一题相同，想到了 <code>UPPER</code> 和 <code>LOWER</code>
-函数进行大小写变换，但完全想不出首字母大写的处理（子字符串函数）。发现自己对字符串函数的掌握还太欠缺：
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, CONCAT(<span class="built_in">UPPER</span>(<span class="built_in">SUBSTRING</span>(name, <span class="number">1</span>, <span class="number">1</span>)), <span class="built_in">LOWER</span>(<span class="built_in">SUBSTRING</span>(name, <span class="number">2</span>, LENGTH(name) <span class="operator">-</span> <span class="number">1</span>))) <span class="keyword">AS</span> name</span><br><span class="line"><span class="keyword">FROM</span> Users</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> user_id</span><br></pre></td></tr></table></figure></p>
-<h3 id="keypoint">Keypoint</h3>
-<h4 id="group_concat-函数"><code>GROUP_CONCAT</code> 函数</h4>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GROUP_CONCAT([<span class="keyword">DISTINCT</span>] expression1</span><br><span class="line">             [<span class="keyword">ORDER</span> <span class="keyword">BY</span> expression2]</span><br><span class="line">             [SEPARATOR sep]);</span><br></pre></td></tr></table></figure>
-<p><code>GROUP_CONCAT</code>
-函数将组中的字符串连接成为单个字符串。<code>SEPARATOR</code>
-指定在组中的值之间插入的文字值，若不指定，默认分隔符为<code>,</code>。<code>GROUP_CONCAT</code>
-函数忽略 <code>NULL</code>，如果找不到匹配的行，或者所有参数都为
-<code>NULL</code>，则返回 <code>NULL</code>。</p>
-<h4 id="concat-函数"><code>CONCAT</code> 函数</h4>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CONCAT(input_string1, input_string2 [, input_stringN]);</span><br></pre></td></tr></table></figure>
-<p><code>CONCAT</code>
-函数可将两个或多个字符串连接成一个字符串。如果传递非字符串值，<code>CONCAT</code>
-函数将在连接之前将这些值隐式转换为字符串；<code>NULL</code>
-会转换为空字符串。</p>
-<h4 id="substring-函数"><code>SUBSTRING</code> 函数</h4>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">SUBSTRING</span>(input_string, <span class="keyword">start</span>, length);</span><br></pre></td></tr></table></figure>
-<p><code>SUBSTRING</code>
-从输入字符串中的位置开始提取具有指定长度的子字符串。如果
-<code>start + length &gt; input_string</code>
-的长度，子字符串将包含剩余所有字符。</p>
+        <h3 id="树的子结构">树的子结构</h3>
+<p>一开始的思路是对 A、B
+分别进行二叉树遍历，判断<code>A.val</code>数组是否包含<code>B.val</code>的数组，也过了绝大部分测试用例，但最后发现仍然有些特殊情况不符合这个条件，遂放弃。<a
+target="_blank" rel="noopener" href="https://leetcode.cn/problems/shu-de-zi-jie-gou-lcof/solutions/144306/mian-shi-ti-26-shu-de-zi-jie-gou-xian-xu-bian-li-p/">题解</a>的这个递归的方法并不是很好想，若
+B 是 A 的子结构，B 的根节点可以是 A
+的任何一个节点，因此任务拆解为，先遍历 A
+中的每个节点（<code>isSubStructure</code>），再判断树 A 中
+以该节点为根节点的子树是否包含树 B（<code>recursion</code>）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isSubStructure</span>(<span class="params">self, A: TreeNode, B: TreeNode</span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> A <span class="keyword">or</span> <span class="keyword">not</span> B:  <span class="comment"># 约定空树不是任意一个树的子结构</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">recursion</span>(<span class="params">A, B</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> B:  <span class="comment"># 树 B 遍历完毕，说明 B 中节点在 A 中均有对应</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">not</span> A) <span class="keyword">or</span> (A.val != B.val):  <span class="comment"># 树 A 先遍历完毕，说明 B 中存在 A 中没有的结构；或两棵树对应节点的值不等</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">return</span> recursion(A.left, B.left) <span class="keyword">and</span> recursion(A.right, B.right)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> recursion(A, B) <span class="keyword">or</span> self.isSubStructure(A.left, B) <span class="keyword">or</span> self.isSubStructure(A.right, B)  <span class="comment"># 从 A 的根节点 / A 的左子树根节点/ A 的右子树根节点开始判断</span></span><br></pre></td></tr></table></figure>
+<h3 id="二叉树的镜像">二叉树的镜像</h3>
+<p>将右节点递归的返回值作为左节点，左节点递归的返回值作为右节点
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">mirrorTree</span>(<span class="params">self, root: TreeNode</span>) -&gt; TreeNode:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        root.left, root.right = self.mirrorTree(root.right), self.mirrorTree(root.left)</span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure></p>
+<p>这个遍历并交换的<a
+target="_blank" rel="noopener" href="https://leetcode.cn/problems/er-cha-shu-de-jing-xiang-lcof/solutions/180718/mian-shi-ti-27-er-cha-shu-de-jing-xiang-di-gui-fu-/">方法</a>更容易理解。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">mirrorTree</span>(<span class="params">self, root: TreeNode</span>) -&gt; TreeNode:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root: <span class="keyword">return</span></span><br><span class="line">        stack = [root]</span><br><span class="line">        <span class="keyword">while</span> stack:</span><br><span class="line">            node = stack.pop()</span><br><span class="line">            <span class="keyword">if</span> node.left: stack.append(node.left)</span><br><span class="line">            <span class="keyword">if</span> node.right: stack.append(node.right)</span><br><span class="line">            node.left, node.right = node.right, node.left</span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure></p>
+<h3 id="对称的二叉树">对称的二叉树</h3>
 <blockquote>
-<p>与大多数编程语言不同，参数 <code>start</code> 是从 1
-开始的字符位置并非从 0 开始的下标；第三个参数是长度而非子串结束位置</p>
+<p>做完镜像二叉树以后，一个惯性方法是创建<code>root</code>的镜像树，再判断两棵树是否相同。可通过，但是要注意创建镜像树时对<code>root</code>进行深拷贝。</p>
 </blockquote>
-<h4 id="upper-和-lower-函数"><code>UPPER</code> 和 <code>LOWER</code>
-函数</h4>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UPPER</span>(input_string);</span><br><span class="line"><span class="built_in">LOWER</span>(input_string);</span><br></pre></td></tr></table></figure>
-<p><code>UPPER</code> / <code>UCASE</code>
-函数将输入字符串转换为大写，<code>LOWER</code> / <code>LCASE</code>
-函数将输入字符串转换为小写。</p>
-<h4 id="left-和-right-函数"><code>LEFT</code> 和 <code>RIGHT</code>
-函数</h4>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LEFT</span>(input_string, number_of_characters);</span><br><span class="line"><span class="keyword">RIGHT</span>(input_string, number_of_characters);</span><br></pre></td></tr></table></figure>
-<p><code>LEFT</code>
-函数从提供的字符串的左侧提取给定数量的字符，<code>RIGHT</code>
-函数从提供的字符串的右侧提取给定数量的字符。</p>
+<p>这题的思路其实和上面的树的子结构有些相似，同样是递归遍历两棵树（这里是同一棵树的左子树和右子树），当同时越过叶节点时，两棵树对称，只有一颗树越过叶节点或值不相等时不对称。不同的地方在于，递归的递推条件应该是对比左子树的左子树与右子树的右子树，左子树的右子树与右子树的左子树。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isSymmetric</span>(<span class="params">self, root: TreeNode</span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">recur</span>(<span class="params">A, B</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> A <span class="keyword">and</span> <span class="keyword">not</span> B:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="keyword">not</span> A:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="keyword">not</span> B:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">if</span> A.val != B.val:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">return</span> recur(A.left, B.right) <span class="keyword">and</span> recur(A.right, B.left)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> recur(root.left, root.right)</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -437,7 +405,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/SQL/" rel="tag"># SQL</a>
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          
+            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag"># 二叉树</a>
           
         </div>
       
@@ -450,8 +422,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2023/02/20/SQL-1/" rel="next" title="SQL笔记（一） - LC608 / CASE / IF">
-                <i class="fa fa-chevron-left"></i> SQL笔记（一） - LC608 / CASE / IF
+              <a href="/2023/03/12/algorithm-2/" rel="next" title="算法刷题（二） - 链表操作">
+                <i class="fa fa-chevron-left"></i> 算法刷题（二） - 链表操作
               </a>
             
           </div>
@@ -459,10 +431,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2023/02/22/SQL-3/" rel="prev" title="SQL笔记（三） - LC1795 / 透视表">
-                SQL笔记（三） - LC1795 / 透视表 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -595,9 +563,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#question"><span class="nav-number">1.</span> <span class="nav-text">Question</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#solution"><span class="nav-number">2.</span> <span class="nav-text">Solution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#question-2"><span class="nav-number">3.</span> <span class="nav-text">Question 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#solution-2"><span class="nav-number">4.</span> <span class="nav-text">Solution 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#keypoint"><span class="nav-number">5.</span> <span class="nav-text">Keypoint</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#group_concat-%E5%87%BD%E6%95%B0"><span class="nav-number">5.1.</span> <span class="nav-text">GROUP_CONCAT 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#concat-%E5%87%BD%E6%95%B0"><span class="nav-number">5.2.</span> <span class="nav-text">CONCAT 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#substring-%E5%87%BD%E6%95%B0"><span class="nav-number">5.3.</span> <span class="nav-text">SUBSTRING 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#upper-%E5%92%8C-lower-%E5%87%BD%E6%95%B0"><span class="nav-number">5.4.</span> <span class="nav-text">UPPER 和 LOWER
-函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#left-%E5%92%8C-right-%E5%87%BD%E6%95%B0"><span class="nav-number">5.5.</span> <span class="nav-text">LEFT 和 RIGHT
-函数</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">树的子结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%95%9C%E5%83%8F"><span class="nav-number">2.</span> <span class="nav-text">二叉树的镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E7%9A%84%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">3.</span> <span class="nav-text">对称的二叉树</span></a></li></ol></div>
             
 
           </div>

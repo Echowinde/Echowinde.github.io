@@ -289,6 +289,286 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/03/21/algorithm-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Echowind's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/03/21/algorithm-3/" itemprop="url">算法刷题（三） - 二叉树的结构</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-21T10:51:56+08:00">
+                2023-03-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="树的子结构">树的子结构</h3>
+<p>一开始的思路是对 A、B
+分别进行二叉树遍历，判断<code>A.val</code>数组是否包含<code>B.val</code>的数组，也过了绝大部分测试用例，但最后发现仍然有些特殊情况不符合这个条件，遂放弃。<a
+target="_blank" rel="noopener" href="https://leetcode.cn/problems/shu-de-zi-jie-gou-lcof/solutions/144306/mian-shi-ti-26-shu-de-zi-jie-gou-xian-xu-bian-li-p/">题解</a>的这个递归的方法并不是很好想，若
+B 是 A 的子结构，B 的根节点可以是 A
+的任何一个节点，因此任务拆解为，先遍历 A
+中的每个节点（<code>isSubStructure</code>），再判断树 A 中
+以该节点为根节点的子树是否包含树 B（<code>recursion</code>）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isSubStructure</span>(<span class="params">self, A: TreeNode, B: TreeNode</span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> A <span class="keyword">or</span> <span class="keyword">not</span> B:  <span class="comment"># 约定空树不是任意一个树的子结构</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">recursion</span>(<span class="params">A, B</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> B:  <span class="comment"># 树 B 遍历完毕，说明 B 中节点在 A 中均有对应</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">not</span> A) <span class="keyword">or</span> (A.val != B.val):  <span class="comment"># 树 A 先遍历完毕，说明 B 中存在 A 中没有的结构；或两棵树对应节点的值不等</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">return</span> recursion(A.left, B.left) <span class="keyword">and</span> recursion(A.right, B.right)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> recursion(A, B) <span class="keyword">or</span> self.isSubStructure(A.left, B) <span class="keyword">or</span> self.isSubStructure(A.right, B)  <span class="comment"># 从 A 的根节点 / A 的左子树根节点/ A 的右子树根节点开始判断</span></span><br></pre></td></tr></table></figure>
+<h3 id="二叉树的镜像">二叉树的镜像</h3>
+<p>将右节点递归的返回值作为左节点，左节点递归的返回值作为右节点
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">mirrorTree</span>(<span class="params">self, root: TreeNode</span>) -&gt; TreeNode:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        root.left, root.right = self.mirrorTree(root.right), self.mirrorTree(root.left)</span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure></p>
+<p>这个遍历并交换的<a
+target="_blank" rel="noopener" href="https://leetcode.cn/problems/er-cha-shu-de-jing-xiang-lcof/solutions/180718/mian-shi-ti-27-er-cha-shu-de-jing-xiang-di-gui-fu-/">方法</a>更容易理解。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">mirrorTree</span>(<span class="params">self, root: TreeNode</span>) -&gt; TreeNode:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root: <span class="keyword">return</span></span><br><span class="line">        stack = [root]</span><br><span class="line">        <span class="keyword">while</span> stack:</span><br><span class="line">            node = stack.pop()</span><br><span class="line">            <span class="keyword">if</span> node.left: stack.append(node.left)</span><br><span class="line">            <span class="keyword">if</span> node.right: stack.append(node.right)</span><br><span class="line">            node.left, node.right = node.right, node.left</span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure></p>
+<h3 id="对称的二叉树">对称的二叉树</h3>
+<blockquote>
+<p>做完镜像二叉树以后，一个惯性方法是创建<code>root</code>的镜像树，再判断两棵树是否相同。可通过，但是要注意创建镜像树时对<code>root</code>进行深拷贝。</p>
+</blockquote>
+<p>这题的思路其实和上面的树的子结构有些相似，同样是递归遍历两棵树（这里是同一棵树的左子树和右子树），当同时越过叶节点时，两棵树对称，只有一颗树越过叶节点或值不相等时不对称。不同的地方在于，递归的递推条件应该是对比左子树的左子树与右子树的右子树，左子树的右子树与右子树的左子树。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isSymmetric</span>(<span class="params">self, root: TreeNode</span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">recur</span>(<span class="params">A, B</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> A <span class="keyword">and</span> <span class="keyword">not</span> B:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="keyword">not</span> A:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="keyword">not</span> B:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">if</span> A.val != B.val:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">return</span> recur(A.left, B.right) <span class="keyword">and</span> recur(A.right, B.left)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> recur(root.left, root.right)</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/03/12/algorithm-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Echowind's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/03/12/algorithm-2/" itemprop="url">算法刷题（二） - 链表操作</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-12T23:19:56+08:00">
+                2023-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="反转链表">反转链表</h3>
+<p>双指针，其中<code>cur</code>指向当前遍历节点，另一个<code>prev</code>指向当前节点的前一个节点，另外需要一个临时变量<code>temp</code>记录后一个节点，三个节点的指向交换即可。注意循环中的赋值顺序不能调换，先用临时变量记录后节点，再调转当前节点的指向，然后依次将<code>prev</code>、<code>cur</code>向后移动。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reverseList</span>(<span class="params">self, head: <span class="type">Optional</span>[ListNode]</span>) -&gt; <span class="type">Optional</span>[ListNode]:</span><br><span class="line">        prev = <span class="literal">None</span></span><br><span class="line">        cur = head</span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            temp = cur.<span class="built_in">next</span>           </span><br><span class="line">            cur.<span class="built_in">next</span> = prev</span><br><span class="line">            prev = cur</span><br><span class="line">            cur = temp</span><br><span class="line">        <span class="keyword">return</span> prev</span><br></pre></td></tr></table></figure></p>
+<h3 id="删除链表的节点">删除链表的节点</h3>
+<p>与反转链表相似的思路解决，更简单。注意特殊情况，删除头节点时直接返回<code>head.next</code>，以及删除节点后可直接退出循环。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deleteNode</span>(<span class="params">self, head: ListNode, val: <span class="built_in">int</span></span>) -&gt; ListNode:</span><br><span class="line">        <span class="keyword">if</span> head.val == val:</span><br><span class="line">            <span class="keyword">return</span> head.<span class="built_in">next</span></span><br><span class="line">        prev, cur = <span class="literal">None</span>, head</span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            <span class="keyword">if</span> cur.val == val:</span><br><span class="line">                prev.<span class="built_in">next</span> = cur.<span class="built_in">next</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            prev = cur</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> head</span><br></pre></td></tr></table></figure></p>
+<p>拓展到链表中倒数第 k
+个节点，仍然使用双指针。对链表遍历的终止条件是<code>cur</code>指向<code>None</code>，此时<code>prev</code>需在倒数第
+k 个节点，则两个指针间相距 k
+个节点。因此，先将<code>cur</code>单独向后移动 k
+次，然后同时将两个指针向后遍历即可。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getKthFromEnd</span>(<span class="params">self, head: ListNode, k: <span class="built_in">int</span></span>) -&gt; ListNode:</span><br><span class="line">        prev, cur = head, head</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(k):</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">            prev = prev.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> prev</span><br></pre></td></tr></table></figure></p>
+<h3 id="复制复杂链表">复制复杂链表</h3>
+<p>这一题的难点在于，构造新链表的每个节点时，无法处理<code>random</code>的指向，因为指向的节点可能还未创建，没什么思路。<a
+target="_blank" rel="noopener" href="https://leetcode.cn/problems/fu-za-lian-biao-de-fu-zhi-lcof/solutions/476617/jian-zhi-offer-35-fu-za-lian-biao-de-fu-zhi-ha-xi-/">题解</a>给出的一个直观的方法是使用哈希表，先遍历一遍链表，将旧节点与创建的新节点一一对应起来，在第二次遍历中给新节点的指向赋值。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">copyRandomList</span>(<span class="params">self, head: <span class="string">&#x27;Node&#x27;</span></span>) -&gt; <span class="string">&#x27;Node&#x27;</span>:</span><br><span class="line">        dic = <span class="built_in">dict</span>()</span><br><span class="line">        cur = head</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> head:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            node = Node(cur.val)</span><br><span class="line">            dic[cur] = node</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        cur = head</span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            dic[cur].<span class="built_in">next</span> = dic.get(cur.<span class="built_in">next</span>)</span><br><span class="line">            dic[cur].random = dic.get(cur.random)</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> dic[head]</span><br></pre></td></tr></table></figure></p>
+<h3 id="合并两个有序链表">合并两个有序链表</h3>
+<p>用递归比较简单，思路也清晰，但是做的时候每次都想不到。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">mergeTwoLists</span>(<span class="params">self, l1: ListNode, l2: ListNode</span>) -&gt; ListNode:</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> l1:</span><br><span class="line">            <span class="keyword">return</span> l2</span><br><span class="line">        <span class="keyword">elif</span> <span class="keyword">not</span> l2:</span><br><span class="line">            <span class="keyword">return</span> l1</span><br><span class="line">        <span class="keyword">if</span> l1.val &lt; l2.val:</span><br><span class="line">            l1.<span class="built_in">next</span> = self.mergeTwoLists(l1.<span class="built_in">next</span>, l2)</span><br><span class="line">            <span class="keyword">return</span> l1</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            l2.<span class="built_in">next</span> = self.mergeTwoLists(l1, l2.<span class="built_in">next</span>)</span><br><span class="line">            <span class="keyword">return</span> l2</span><br></pre></td></tr></table></figure></p>
+<p>自己写的迭代版本，用了额外空间，对比双指针指向的 l1 和 l2
+的当前节点，当其中一个链表遍历结束后，将另一个链表的后续节点全部接入<code>cur</code>中。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">mergeTwoLists</span>(<span class="params">self, l1: ListNode, l2: ListNode</span>) -&gt; ListNode:</span><br><span class="line">        head = ListNode()</span><br><span class="line">        cur = head</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> l1:</span><br><span class="line">            <span class="keyword">return</span> l2</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> l2:</span><br><span class="line">            <span class="keyword">return</span> l1</span><br><span class="line">        <span class="keyword">while</span> l1 <span class="keyword">and</span> l2:</span><br><span class="line">            <span class="keyword">if</span> l1.val &lt; l2.val:</span><br><span class="line">                cur.val = l1.val</span><br><span class="line">                l1 = l1.<span class="built_in">next</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cur.val = l2.val</span><br><span class="line">                l2 = l2.<span class="built_in">next</span></span><br><span class="line">            cur.<span class="built_in">next</span> = ListNode()</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> l1:</span><br><span class="line">            cur.val = l2.val</span><br><span class="line">            cur.<span class="built_in">next</span> = l2.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> l2:</span><br><span class="line">            cur.val = l1.val</span><br><span class="line">            cur.<span class="built_in">next</span> = l1.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> head</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2023/03/11/algorithm-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1292,262 +1572,6 @@ pyproj 库）的操作是这样写的： <figure class="highlight python"><table
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/08/23/my-2019-pre-epidemic-memory/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Echowind's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/08/23/my-2019-pre-epidemic-memory/" itemprop="url">疫情前的记忆——我的2019</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-08-23T15:22:41+08:00">
-                2022-08-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote>
-<p>愿生如夏花之绚烂，死如秋叶之静美。</p>
-</blockquote>
-<h3 id="由">由</h3>
-<p>不知道自己为什么想起来写这样一篇文章，可能只是某次翻阅相册后的触景生情，更可能是发现我已经开始健忘，记忆逐渐模糊，在手里的水从指缝中漏完之前，应该找个地方把它盛起来。很多人怀念疫情前的生活，那个时候有不用带口罩的自由，享受着外卖送到楼下的便利，但我并不是想对比那时与现在，只是单纯地记述这段回忆。因为于我来说，2019
-年，从现在看来，真是一个精彩至极的年份，一段此生难忘的记忆。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/08/23/my-2019-pre-epidemic-memory/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/08/17/hexo-diary-3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Echowind's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/08/17/hexo-diary-3/" itemprop="url">Hexo建站日记（三）——添加个人豆瓣主页</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-08-17T21:50:07+08:00">
-                2022-08-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在博客里集成豆瓣主页是我从一开始就想做的功能，在这里感谢 hexo-douban
-的作者 <a target="_blank" rel="noopener" href="https://blog.mythsman.com/">Mythsman</a>
-为我们开发了这样一个简单又实用的插件，他的女朋友居然还是我的校友
-hhh。从他的博文里，能看出他不仅是一个很有技术力的大佬，也是一个热爱生活、内心细腻且有担当的人。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/08/17/hexo-diary-3/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1598,7 +1622,7 @@ hhh。从他的博文里，能看出他不仅是一个很有技术力的大佬�
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1611,7 +1635,7 @@ hhh。从他的博文里，能看出他不仅是一个很有技术力的大佬�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
