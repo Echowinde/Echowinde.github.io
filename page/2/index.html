@@ -289,6 +289,137 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/09/22/GPS-and-LPR-trajectory-rectification/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Echowind's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/09/22/GPS-and-LPR-trajectory-rectification/" itemprop="url">GPS和LPR轨迹数据的纠偏</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-22T14:40:23+08:00">
+                2022-09-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="gps漂移处理">GPS漂移处理</h3>
+<p>GPS 轨迹点的漂移，最常见于当车辆进入隧道等 GPS
+信号弱的区间时，本该位于区间内的 GPS
+定位点却停留在入口处，而等到车辆驶出区间后，GPS
+点又瞬移到出口处。这种情况下，我们利用 GPS
+数据计算车速时会出现区间内速度为
+0，出口处又严重超速的现象，且车辆定位不准确同样影响会空间分析的结果，因此，需要进行修正。</p>
+<img src="/2022/09/22/GPS-and-LPR-trajectory-rectification/1.png" class="" title="GPS 出现漂移的位置分布">
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2022/09/22/GPS-and-LPR-trajectory-rectification/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/08/23/my-2019-pre-epidemic-memory/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1436,142 +1567,11 @@ WGS-84，但我不想频繁转换数据的坐标系。于是尝试从高德地�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://echowinde.github.io/2022/05/02/my-first-blog/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Echowind's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/05/02/my-first-blog/" itemprop="url">我开始写博客啦</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-02T20:37:59+08:00">
-                2022-05-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>从去年发现 GitHub Pages
-可以托管静态页面之后，我就萌生了搭建个人博客网站的想法，但是因为学习和科研一直很忙<del>就是懒</del>，所以直到这个被关在学校里的五一节，在
-Apex
-坐牢无数把，B站刷到索然无味后，我终于把这个博客搭建起来了。目前这个博客使用
-Hexo 框架部署在 GitHub Pages
-上，很多功能和美化我都还没有做，博客也还没有独立的域名，等更新稳定了再去买一个吧。之后我会把生活、科研和学习的日常所思所想
-post 在这上面，顺便用 hexo-douban
-这个插件把豆瓣的电影和图书记录同步过来，这样也会有些影评之类的内容，争取多多更新~</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/05/02/my-first-blog/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/">&lt;i class&#x3D;&quot;fa fa-angle-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/">&lt;i class&#x3D;&quot;fa fa-angle-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
   </nav>
 
 
@@ -1617,7 +1617,7 @@ post 在这上面，顺便用 hexo-douban
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
