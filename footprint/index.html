@@ -56,10 +56,7 @@
             loca.add(layer);
             */
             
-            fetch('https://api.github.com/repos/Echowinde/Echowinde.github.io/contents/about/provinces.json?ref=main', {
-              headers: {
-                Accept: 'application/vnd.github.v3.raw',
-              }})
+            fetch('./provinces.json')
               .then(function(response) {
                 return response.json();
               })
