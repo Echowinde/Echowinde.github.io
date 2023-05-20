@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+        <script type="text/javascript">
+            window._AMapSecurityConfig = {
+                securityJsCode:'18f96fb44804b96dea11c80d7d0a77bb',
+            }
+        </script>
+        <script src="https://webapi.amap.com/maps?key=02153651aaff1903be339c03b45aae60&v=2.0"></script>
+        <script src="https://webapi.amap.com/loca?v=2.0.0&key=02153651aaff1903be339c03b45aae60"></script>
+        <style>
+            html, body, #container {
+              width: 100%;
+              height: 100%;
+              margin: 0;
+              padding: 0;
+            }
+        </style>
+        <title>JS可视化</title>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script>
+            const map = new AMap.Map('container', {
+                zoom: 5,
+                viewMode: '3D',
+                center: [107.4976,32.1697],
+                mapStyle:'amap://styles/grey'
+            });    
+
+            var loca = new Loca.Container({
+                map: map
+            });
+            /*
+            var geo = new Loca.GeoJSONSource({
+                url: 'https://a.amap.com/Loca/static/loca-v2/demos/mock_data/hz_gn.json',
+            });
+
+            var layer = new Loca.LabelsLayer({
+                loca: loca,
+                zooms: [2, 20],
+                zIndex: 120,
+                visible: true,
+                collision: true,
+                allowCollision: true,
+            })
+            layer.setSource(geo);
+            layer.setStyle({
+                text: {
+                    content: (index, feat) => feat.properties.name,
+                },
+            });
+            loca.add(layer);
+            */
+            
+            fetch('./provinces.json')
+              .then(function(response) {
+                return response.json();
+              })
+              .then(function(geojsonData) {
+                const coordinates = geojsonData.features.map(feature => feature.geometry.coordinates);
+                coordinates.forEach(function(coordinate) {
+                  polygon = new AMap.Polygon({
+                    strokeWeight: 1,
+                    path: coordinate,
+                    fillOpacity: 0.4,
+                    fillColor: '#80d8ff',
+                    strokeColor: '#0091ea'
+                  });
+                  map.add(polygon)
+                });
+              });
+
+        </script>
+        
+    </body>
+</html>
